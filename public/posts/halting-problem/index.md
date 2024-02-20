@@ -3,6 +3,7 @@ title: "ترمز رو بکش عمو آلنننن"
 date: 2024-02-21
 keywords: halting problem, turing
 lang: fa
+dir: rtl
 ---
 
 خب. اگه سر کلاس [نصر](https://sciold.ui.ac.ir/~nasr_a/) یا [عمو مجی](https://mcs.ui.ac.ir/page-professors1/fa/45/showblock/blktool_dorsaetoolsenforcementactivities_sample_professors_block9029/21476/sp-400017) بودید، احتمالا عبارت Halting Problem به گوشتون خورده. همون جلسات اول سر کلاس برنامه نویسی مقدماتی بودیم که برای اولین بار آوای غریب اسمش در کلاس پیچید و من حتی نتونستم تلفظ درستش رو متوجه بشم. 
