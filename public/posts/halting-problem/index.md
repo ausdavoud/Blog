@@ -1,6 +1,6 @@
 ---
 title: "ترمز رو بکش عمو آلنننن"
-date: 2024-02-01
+date: 2024-02-21
 keywords: halting problem, turing
 lang: fa
 ---
