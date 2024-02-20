@@ -1,8 +1,8 @@
 import { Config } from "./app/utils/types"
 const config: Config = {
-    blog_name: 'Blogger',
-    description: 'Your favorite blog template',
-    author: { name: 'Mohammad Mallaee', url: 'https://github.com/mohammad-mallaee' },
+    blog_name: 'TheWood',
+    description: 'Random Computer Science Sh*t',
+    author: { name: 'Davooud Nosrati', url: 'https://github.com/thewoood' },
     theme: 'auto',
     navLinks: [
         {
