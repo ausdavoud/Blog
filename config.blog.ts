@@ -1,7 +1,7 @@
 import { Config } from "./app/utils/types"
 const config: Config = {
     blog_name: 'TheWood',
-    description: 'Random Computer Science Sh*t',
+    description: 'Random Computer Science Stuff',
     author: { name: 'Davooud Nosrati', url: 'https://github.com/thewoood' },
     theme: 'auto',
     navLinks: [
