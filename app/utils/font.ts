@@ -1,4 +1,4 @@
-import { Nunito } from "next/font/google"
-const font = Nunito({ subsets: ['latin'] })
+import { Vazirmatn } from "next/font/google"
+const font = Vazirmatn({ subsets: ['latin'] })
 
 export default font
