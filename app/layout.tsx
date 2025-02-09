@@ -1,10 +1,11 @@
 import type { Metadata } from 'next'
 import './globals.css'
 import './utils/colors.css'
-import Header from './components/Header'
-import ThemeProvider from './components/ThemeProvider'
-import './utils/font'
-import config from '@/config.blog'
+import './utils/variables.css'
+import './utils/extra.css'
+import config from '@/config'
+import Providers from './components/Providers'
+import font from './utils/font'
 
 export const metadata: Metadata = {
   metadataBase: new URL(config.metadata_base),
@@ -24,12 +25,11 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <body className={`antialiased`}>
-        <ThemeProvider>
-          <Header />
+    <html lang="en" suppressHydrationWarning>
+      <body className={'flex flex-col items-center bg-background text-on-background ' + font.className}>
+        <Providers>
           {children}
-        </ThemeProvider>
+        </Providers>
       </body>
     </html>
   )

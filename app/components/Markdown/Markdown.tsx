@@ -5,9 +5,10 @@ import rehypeKatex from "rehype-katex"
 import 'katex/dist/katex.min.css'
 import remarkMath from "remark-math"
 
-export default function Markdown({ source }: { source: string, components?: any }) {
+export default function Markdown({ source, components }: { source: string, components: any }) {
     return <MDXRemote
         source={source}
+        components={{ ...components }}
         options={{
             mdxOptions: {
                 useDynamicImport: true,
@@ -17,11 +18,15 @@ export default function Markdown({ source }: { source: string, components?: any 
                     //@ts-ignore
                     [rehypePrettyCode, {
                         keepBackground: false,
+                        theme: {
+                            dark: "github-dark",
+                            light: "github-light",
+                        }
                     }]
                 ],
                 remarkPlugins: [
                     remarkMath,
                 ]
-            },
+            }
         }} />
 }
