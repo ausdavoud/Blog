@@ -4,11 +4,12 @@ import './utils/colors.css'
 import './utils/variables.css'
 import './utils/extra.css'
 import config from '@/config'
-import Providers from './components/Providers'
-import font from './utils/font'
+import Providers from './components/providers'
+import fonts from './utils/font'
+import GoogleAnalytics from './components/GoogleAnalytics'
 
 export const metadata: Metadata = {
-  metadataBase: new URL(config.metadata_base),
+  metadataBase: new URL(config.site_url),
   title: {
     default: config.blog_name,
     template: `%s | ${config.blog_name}`,
@@ -24,9 +25,14 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+  const fontFamily = Array.isArray(fonts)
+    ? fonts.map(f => f.style.fontFamily.split(",")[0]).join(", ")
+    : fonts.style.fontFamily
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={'flex flex-col items-center bg-background text-on-background ' + font.className}>
+      <GoogleAnalytics />
+      <body className={'flex bg-background text-on-background justify-center gap-8'}
+        style={{ fontFamily }}>
         <Providers>
           {children}
         </Providers>
