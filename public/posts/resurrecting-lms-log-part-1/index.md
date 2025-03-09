@@ -1,5 +1,5 @@
 ---
-title: "Resurrecting LMS Log (Unif) - Part 1
+title: Resurrecting LMS Log (Unif) - Part 1
 date: 2025-03-08
 keywords: lmslog, unif, Django, Celery, Scraping
 lang: en
