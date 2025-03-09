@@ -1,9 +1,9 @@
 const config = {
-    blog_name: 'Ausdavoud',
+    blog_name: 'ausdavoud',
     description: 'Random Computer Science Stuff',
     theme: 'system',
     logo: "/logo.png",
-    author: "Mohammad Mallaee",
+    author: "Davoud Nosrati",
     header: {
         nav_links: [
         ],

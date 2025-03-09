@@ -2,8 +2,6 @@
 title: Resurrecting LMS Log (Unif) - Part 1
 date: 2025-03-08
 keywords: lmslog, unif, Django, Celery, Scraping
-lang: en
-dir: ltr
 ---
 
 So, I developed an app called LMS Log (Now called **Unif**) during my first semester at university. LMS, or Learning Management System, is a website that hosts all the course materials and notifications from professors. But I’m too lazy to check it every day just to see if there’s anything new—like exercises, updated deadlines, canceled sessions, online classes, or whatever else.
