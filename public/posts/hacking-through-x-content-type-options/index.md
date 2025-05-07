@@ -131,11 +131,11 @@ Notice that we're returning a script tag wrapped by an html one.
 Now let's open http://localhost:8081/health in browser (instead of using curl).
 
 Here's what we see:
-![[Alert.png]]
+![](https://raw.githubusercontent.com/ausdavoud/Blog/refs/heads/main/public/posts/hacking-through-x-content-type-options/img/alert.png)
 It actually ran the code!
 
 Let's take a look at the network tab in browser developer tools:
-![[Network Tab.png]]
+![](https://raw.githubusercontent.com/ausdavoud/Blog/refs/heads/main/public/posts/hacking-through-x-content-type-options/img/network-tab.png)
 It's clear that the content-type is sniffed and overwritten by the browser.
 
 So how can we avoid this? You see, modern browsers are smarter these days. They don't sniff and run html (and script) codes if there's a content-type at all. So even if we set the content-type to `text/plain` or `application/octet-stream` it won't run the script. So there's no need to put the `X-Content-Type-Options: nosniff` if we explicitly set content-type. 
@@ -153,7 +153,7 @@ func (*Application) CheckHealth(w http.ResponseWriter, r *http.Request) {
 ```
 
 And head to http://localhost:8081/health:
-![Adding Content-Type](add-content-type.png)
+![Adding Content-Type](https://raw.githubusercontent.com/ausdavoud/Blog/refs/heads/main/public/posts/hacking-through-x-content-type-options/img/add-content-type.png)
 
 As you see, the returned value is now a plain text and not a render-able html code.
 
