@@ -155,7 +155,7 @@ func (*Application) CheckHealth(w http.ResponseWriter, r *http.Request) {
 And head to http://localhost:8081/health:
 ![Adding Content-Type](./img/add-content-type.png)
 
-As you see, the returned value is now a plain text and not a renderable html code.
+As you see, the returned value is now a plain text and not a render-able html code.
 
 
 yeah, done. bye. 
