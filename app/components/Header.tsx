@@ -6,13 +6,18 @@ import config from "@/config";
 import ThemeIcon from "./ThemeIcon";
 import { useTheme } from "next-themes";
 import { Menu } from "lucide-react";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import SidebarContext from "./providers/sidebar";
 
 export default function Header({ sidebar }: { sidebar: boolean }) {
     const pathname = usePathname()
     const { theme, setTheme } = useTheme()
     const context = useContext(SidebarContext)
+
+    useEffect(() => {
+        if (theme && theme !== "light" && theme !== "dark")
+            setTheme(config.theme)
+    }, [theme, setTheme])
     return <div className={`flex flex-wrap gap-4 sm:flex-row justify-between sm:items-center px-4 md:px-0 pt-3 md:pt-5 pb-2 w-full`}
         style={{ direction: config.direction }}>
         <div className="flex items-center gap-3">
@@ -39,7 +44,7 @@ export default function Header({ sidebar }: { sidebar: boolean }) {
             {
                 config.header.theme_toggle &&
                 <button className="cursor-pointer outline-none" onClick={() => {
-                    setTheme(theme === "system" ? "dark" : theme === "dark" ? "light" : "system")
+                    setTheme(theme === "dark" ? "light" : "dark")
                 }}>
                     <ThemeIcon theme={theme} />
                 </button>

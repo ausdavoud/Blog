@@ -47,6 +47,16 @@ code[data-line-numbers-max-digits="3"] > [data-line]::before {
   @apply py-[0.4rem];
 }
 
+.markdown .katex {
+  font-family: inherit;
+  font-size: 1em;
+  font-weight: normal;
+}
+
+.markdown .katex-display > .katex {
+  font-size: 1.21em;
+}
+
 .markdown a {
   @apply text-link font-medium hover:text-link-hover hover:underline transition-colors;
 }
@@ -60,19 +70,19 @@ code[data-line-numbers-max-digits="3"] > [data-line]::before {
 }
 
 .markdown h1 {
-  @apply mt-4 text-h1 font-medium text-on-background-stronger;
+  @apply mt-8 mb-1 text-h1 font-medium text-on-background-stronger;
 }
 
 .markdown h2 {
-  @apply mt-4 text-h2 font-medium text-on-background-stronger;
+  @apply mt-8 mb-1 text-h2 font-medium text-on-background-stronger;
 }
 
 .markdown h3 {
-  @apply mt-4 text-h3 font-medium text-on-background-stronger;
+  @apply mt-8 mb-1 text-h3 font-medium text-on-background-stronger;
 }
 
 .markdown h4 {
-  @apply mt-4 text-h4 font-normal;
+  @apply mt-8 mb-1 text-h4 font-normal;
 }
 
 .markdown pre {
@@ -99,13 +109,34 @@ html.dark .markdown pre code span {
   @apply p-0 m-0;
 }
 
+.markdown table {
+  @apply mx-auto my-4 w-auto max-w-full border-collapse;
+}
+
+.markdown th,
+.markdown td {
+  @apply border border-outline px-3 py-2 text-left;
+}
+
+.markdown th {
+  @apply bg-surface font-semibold text-on-background-stronger;
+}
+
 .markdown p img {
   margin-bottom: 0;
 }
 
 .markdown ul,
-ol {
-  @apply mx-4 my-2 list-disc;
+.markdown ol {
+  @apply mx-4 my-2;
+}
+
+.markdown ul {
+  @apply list-disc;
+}
+
+.markdown ol {
+  @apply list-decimal;
 }
 
 .markdown li {

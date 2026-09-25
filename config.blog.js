@@ -1,7 +1,7 @@
 const config = {
     blog_name: 'ausdavoud',
     description: 'Random Computer Science Stuff',
-    theme: 'system',
+    theme: 'light',
     logo: "/logo.png",
     author: "Davoud Nosrati",
     header: {
