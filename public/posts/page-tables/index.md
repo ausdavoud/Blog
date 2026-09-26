@@ -1,5 +1,5 @@
 ---
-title: Page Tables —  What MIT 6.828 Taught Me?
+title: Page Tables —  What MIT 6.828 Taught Me
 date: 2026-09-19
 keywords: page tables, os
 ---

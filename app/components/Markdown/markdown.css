@@ -31,6 +31,7 @@ code[data-line-numbers-max-digits="3"] > [data-line]::before {
 }
 
 .markdown :not(pre) > code {
+  overflow-wrap: anywhere;
   padding: 0.15em 0.4em 0.1em;
   @apply text-[0.9375rem] bg-inlineCode-bg text-inlineCode-text mx-[2px] whitespace-normal rounded;
 }
@@ -51,6 +52,13 @@ code[data-line-numbers-max-digits="3"] > [data-line]::before {
   font-family: inherit;
   font-size: 1em;
   font-weight: normal;
+}
+
+.markdown .katex-display {
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-block: 0.25rem;
 }
 
 .markdown .katex-display > .katex {
@@ -86,7 +94,7 @@ code[data-line-numbers-max-digits="3"] > [data-line]::before {
 }
 
 .markdown pre {
-  @apply my-2 overflow-y-auto pl-4 text-sm border border-outline leading-6 rounded-md py-3 bg-code-bg;
+  @apply my-2 max-w-full overflow-x-auto pl-4 text-sm border border-outline leading-6 rounded-md py-3 bg-code-bg;
 }
 
 .markdown pre code {
