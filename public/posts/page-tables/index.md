@@ -4,7 +4,7 @@ date: 2026-09-19
 keywords: page tables, os
 ---
 
-> As much as I hate to say it, this post was written by a so-called human, and no AIs were used in crafting the original text. Fuck your "_It's not_ blah blah blah, _but_ blah blah blah" clauses. 
+> As much as I hate to say it, this post was written by a so-called human, and no AIs were used in crafting the original text. Fuck your "*It's not* blah blah blah, *but* blah blah blah" clauses. 
 
 
 # Prologue 
@@ -91,7 +91,7 @@ Well, one way is to keep a page table for each process, mapping an arbitrary add
 
 That's great, but our current implementation could grow to as many as $2^{56}$ rows (entries) in each page table (that's all the memory we have, remember?). It's because we don't have any boundaries, and each process would like to have all the memory if needed. The thing is, once we want to search and walk through these page tables, having long ones becomes problematic.
 
-So maybe we'd better do some **grouping**. How about we group every 4096 or $2^{12}$ bytes into one group? This way, we'll have fewer items to search at the first stage, and once we find our target group, we'll index through its 4096 members. (You might ask why 4096 all of a sudden? That's the number *they* came up with, so i have no other choice than using it for the purpose of telling the story.)
+So maybe we'd better do some **grouping**. How about we group every 4096 or $2^{12}$ bytes into one group? This way, we'll have fewer items to search at the first stage, and once we find our target group, we'll index through its 4096 members. (You might ask why 4096? That's the number *they* came up with, so I have no other choice than using it for the purpose of telling the story.)
 
 <div className="border-2 border-double grid items-end gap-4 grid-cols-2 p-8">
 <div className="text-center">
@@ -116,7 +116,7 @@ This way, our page table would only grow as far as... you say it. OK, I'll say i
 
 Let's get a bit more pro and call these groups page frames.
 
-> Page Table vs. Page Frame: Once we divide the memory into 4096-byte chunks, we call each chunk a **page frame**. Then each page frame might be used either as a **page table** or a **data page** (wherever we store normal memory data). In fact, we'll be using page tables to route access to both other pages tables, and other data pages.
+> Page Table vs. Page Frame: Once we divide the memory into 4096-byte chunks, we call each chunk a **page frame**. Then each page frame might be used either as a **page table** or a **data page** (wherever we store normal memory data). In fact, we'll be using page tables to route access to both data pages and the other page tables.
 
 <div className="border-2 border-double p-8 text-center">
     ![Page Frame vs. Page Table vs. Data Page](/posts/page-tables/img/frame-vs-table.svg)
