@@ -1,5 +1,5 @@
 ---
-title: Welcome to your new home
+title: Welcome to my little corner
 image: /pink-sky.webp
 ---
 

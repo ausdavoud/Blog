@@ -1,5 +1,5 @@
 const config = {
-    blog_name: 'ausdavoud',
+    blog_name: 'Davoud Nosrati\'s Blog',
     description: 'Random Computer Science Stuff',
     theme: 'light',
     logo: "/logo.png",
