@@ -26,7 +26,8 @@ export type Author = string | {
 
 export type NavLink = {
     name: string,
-    href: string
+    href: string,
+    children?: NavLink[]
 }
 
 export type Config = {

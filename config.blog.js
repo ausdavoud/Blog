@@ -1,11 +1,22 @@
 const config = {
-    blog_name: 'Davoud Nosrati\'s Blog',
+    blog_name: 'Davoud Nosrati',
     description: 'Random Computer Science Stuff',
     theme: 'light',
     logo: "/logo.png",
     author: "Davoud Nosrati",
     header: {
         nav_links: [
+            { name: 'Posts', href: '/posts' },
+            { name: 'Projects', href: '/projects' },
+            {
+                name: 'Art',
+                href: '/art',
+                children: [
+                    { name: 'Motion', href: '/motion' },
+                    { name: 'Poetry', href: '/poetry' },
+                ],
+            },
+            { name: 'About', href: '/about' },
         ],
         blog_name: true,
         logo: false,
