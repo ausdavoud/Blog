@@ -8,16 +8,16 @@ const config = {
     header: {
         nav_links: [
             { name: 'Posts', href: '/posts' },
-            { name: 'Projects', href: '/projects' },
+            { name: 'Projects', href: '/projects', disabled: true },
             {
                 name: 'Art',
                 href: '/art',
                 children: [
-                    { name: 'Motion', href: '/motion' },
-                    { name: 'Poetry', href: '/poetry' },
+                    { name: 'Poetry', href: '/poetry', disabled: true },
+                    { name: 'Motion', href: '/motion', disabled: true },
                 ],
             },
-            { name: 'About', href: '/about' },
+            { name: 'About', href: '/about', disabled: true },
         ],
         blog_name: true,
         logo: false,

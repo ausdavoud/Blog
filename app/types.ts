@@ -27,6 +27,7 @@ export type Author = string | {
 export type NavLink = {
     name: string,
     href: string,
+    disabled?: boolean,
     children?: NavLink[]
 }
 

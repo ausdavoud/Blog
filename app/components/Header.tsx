@@ -7,6 +7,17 @@ import { useTheme } from "next-themes";
 import { ChevronDown, Menu } from "lucide-react";
 import { useContext, useEffect, useRef } from "react";
 import SidebarContext from "./providers/sidebar";
+import { NavLink } from "../types";
+
+function ComingSoon({ link, className, side = false }: { link: NavLink, className: string, side?: boolean }) {
+    return <span role="link" aria-disabled="true" className={`group/soon nav-item relative cursor-default ${className}`}>
+        {link.name}
+        <span className={`nav-glass pointer-events-none absolute z-20 hidden w-fit rounded px-2 py-1 text-[9px] leading-none whitespace-nowrap group-hover/soon:block ${side ? "right-full top-1/2 -translate-y-1/2 mr-2" : "left-1/2 top-full -translate-x-1/2 mt-2"}`}>
+            <span aria-hidden="true" className={`absolute h-2 w-2 rotate-45 bg-inherit border-outline ${side ? "-right-1.5 top-1/2 -translate-y-1/2 border-t border-r [clip-path:polygon(0_0,100%_0,100%_100%)]" : "-top-1.5 left-1/2 -translate-x-1/2 border-t border-l [clip-path:polygon(0_0,100%_0,0_100%)]"}`} />
+            Coming soon
+        </span>
+    </span>
+}
 
 export default function Header({ sidebar }: { sidebar: boolean }) {
     const pathname = usePathname()
@@ -74,7 +85,9 @@ export default function Header({ sidebar }: { sidebar: boolean }) {
                         </summary>
                         <div className="absolute end-0 top-full z-10 min-w-36 pt-2">
                             <div className="nav-glass rounded py-1 shadow-lg">
-                                {link.children.map((child) => <Link key={child.href} href={child.href}
+                                {link.children.map((child) => child.disabled
+                                    ? <ComingSoon key={child.href} link={child} side className="block px-3 py-2" />
+                                    : <Link key={child.href} href={child.href}
                                     aria-current={pathname === child.href ? 'page' : undefined}
                                     data-active={pathname === child.href}
                                     className="nav-item block px-3 py-2"
@@ -84,6 +97,8 @@ export default function Header({ sidebar }: { sidebar: boolean }) {
                             </div>
                         </div>
                     </details>
+                if (link.disabled)
+                    return <ComingSoon key={link.href} link={link} className="px-2 py-1 text-label block first:pl-0" />
                 return <Link key={link.href}
                     aria-current={pathname === link.href ? 'page' : undefined}
                     data-active={isHere}

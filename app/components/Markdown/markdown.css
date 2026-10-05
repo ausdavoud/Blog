@@ -65,8 +65,39 @@ code[data-line-numbers-max-digits="3"] > [data-line]::before {
   font-size: 1.21em;
 }
 
-.markdown a {
+.markdown a:not(.post-row) {
   @apply text-link font-medium hover:text-link-hover hover:underline transition-colors;
+}
+
+.markdown .post-row {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  padding-block: 0.75rem;
+  color: var(--on-background);
+  font-weight: 400;
+  text-decoration: none;
+  transition: opacity 150ms ease;
+}
+
+.post-leader {
+  flex: 1;
+  min-width: 1rem;
+  align-self: center;
+  border-bottom: 1px solid var(--outline);
+  opacity: 0.5;
+}
+
+.post-row time {
+  flex-shrink: 0;
+  color: var(--on-background-muted);
+  font-size: 0.875rem;
+}
+
+@media (hover: hover) {
+  .post-list:has(.post-row:hover) .post-row:not(:hover) {
+    opacity: 0.35;
+  }
 }
 
 .markdown hr {

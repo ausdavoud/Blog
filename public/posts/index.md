@@ -1,9 +1,14 @@
 ---
 title: Posts
+image: /posts/pink-sky.webp
 ---
 
-- [Page Tables — What MIT 6.828 Taught Me](/posts/page-tables)
-- [Hacking Through X-Content-Type-Options](/posts/hacking-through-x-content-type-options)
-- [Resurrecting LMS Log Part 1](/posts/resurrecting-lms-log-part-1)
-- [Halting Problem](/posts/halting-problem)
-- [First Post](/posts/first-post)
+<div className="post-list">
+
+<PostCard post="/posts/page-tables" />
+<PostCard post="/posts/hacking-through-x-content-type-options" />
+<PostCard post="/posts/resurrecting-lms-log-part-1" />
+<PostCard post="/posts/halting-problem" />
+<PostCard post="/posts/first-post" />
+
+</div>
