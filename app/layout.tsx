@@ -31,10 +31,15 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <GoogleAnalytics />
-      <body className={'flex bg-background text-on-background justify-center gap-8'}
+      <body className={'flex min-h-svh flex-col items-center bg-background text-on-background'}
         style={{ fontFamily }}>
         <Providers>
-          {children}
+          <div className="flex flex-1 w-full justify-center gap-8">
+            {children}
+          </div>
+          <footer className="w-full max-w-post px-4 md:px-1 py-6 text-center text-sm text-on-background-muted">
+            2026 · Made on top of <a target="_blank" rel="noopener noreferrer" href="https://github.com/mohammad-mallaee/blogger" className="underline hover:text-on-background">blogger</a>
+          </footer>
         </Providers>
       </body>
     </html>

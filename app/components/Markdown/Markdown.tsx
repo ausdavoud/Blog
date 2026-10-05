@@ -6,6 +6,8 @@ import "katex/dist/katex.min.css";
 import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
 import PostCard from "../PostCard";
+import { ComingSoon } from "../Header";
+import BinaryPhoto from "../BinaryPhoto";
 
 type MarkdownNode = {
   type: string;
@@ -55,7 +57,7 @@ export default function Markdown({
   return (
     <MDXRemote
       source={source}
-      components={{ ...components, PostCard }}
+      components={{ ...components, PostCard, ComingSoon, BinaryPhoto }}
       options={{
         mdxOptions: {
           useDynamicImport: true,

@@ -8,17 +8,17 @@ title: ""
 
 Hey stranger!
 
-In case you don‘t know me, sneak a peek at [about](./about).
+In case you don’t know me, sneak a peek at <ComingSoon link={{ name: "about", href: "/about" }} className="inline-block underline text-on-background-muted" />.
 \
-Still interested? Read my [posts](./posts) and [poems](./poetry).
+Still interested? Read my [posts](/posts) and <ComingSoon link={{ name: "poems", href: "/poetry" }} className="inline-block underline text-on-background-muted" />.
 \
-Also, here‘s a link to my [CV](https://github.com/ausdavoud).
+Also, here’s a link to my <ComingSoon link={{ name: "CV", href: "https://github.com/ausdavoud" }} className="inline-block underline text-on-background-muted" />.
 
 Bye buddy 👋🏻
 </div>
 
 <figure>
-<img className="w-full !mb-1 dark:border dark:border-gray-700 rounded-md" src="./whome-2.webp" alt="me"/>
+<BinaryPhoto src="./whome-2.webp" alt="me" />
 <figcaption className="text-sm text-center text-on-background-muted"><i>edited with care by </i><a  href="https://maryamrezaee.me" target="_blank" rel="noopener noreferrer" className="underline hover:text-on-background">Mary</a></figcaption>
 </figure>
 

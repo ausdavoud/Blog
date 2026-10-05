@@ -9,7 +9,7 @@ import { useContext, useEffect, useRef } from "react";
 import SidebarContext from "./providers/sidebar";
 import { NavLink } from "../types";
 
-function ComingSoon({ link, className, side = false }: { link: NavLink, className: string, side?: boolean }) {
+export function ComingSoon({ link, className, side = false }: { link: NavLink, className: string, side?: boolean }) {
     return <span role="link" aria-disabled="true" className={`group/soon nav-item relative cursor-default ${className}`}>
         {link.name}
         <span className={`nav-glass pointer-events-none absolute z-20 hidden w-fit rounded px-2 py-1 text-[9px] leading-none whitespace-nowrap group-hover/soon:block ${side ? "right-full top-1/2 -translate-y-1/2 mr-2" : "left-1/2 top-full -translate-x-1/2 mt-2"}`}>
