@@ -37,7 +37,7 @@ rather than $$16,000,000,000 \ \text{bytes}$$.
 | Unit | Bytes | Bits |
 |-|-|-|
 | 1 KB | 1,000 | 8,000 |
-| 1 KiB | 1,024 (or 2^{10}) | 8,192 |
+| 1 KiB | 1,024 (or $2^{10}$) | 8,192 |
 
 
 And another table would do the job of a thousand words:
@@ -137,7 +137,7 @@ Let’s be real for a second: Is there any app that consumes that much memory (e
 $$2^{27} \times 2^{12} = 2^{39} \ \text{bytes} = 512 \ \text{GiB}$$
 
 So, to cut down the available memory, we limit how many page frames a process has access to: instead of
-2^{44} pages-frames/process, we get to have 2^{27} page frames/process. But remember, there are still 2^{44} page frames in the whole system. We just give each process a smaller slice of it.
+$2^{44}$ pages-frames/process, we get to have $2^{27}$ page frames/process. But remember, there are still $2^{44}$ page frames in the whole system. We just give each process a smaller slice of it.
 
 Nowadays, it’s a reasonably high amount of RAM for a single process. Compared to the previous 64 petabytes, it is orders of magnitude smaller. But there is another problem. Yes, baby. Problem after problem. Page tables are like your girlfriend: they never run out of problems. But what now? Well, if you were smart enough, you’d have already realized that all these tables must also be stored somewhere. But where and how? Answering these questions will require its own blog post, but another immediate question would be: *"How much memory do we need to store a page table itself?"*
 
@@ -247,7 +247,7 @@ We are accessing the **second** element (index is 0x000) of a page table at virt
 
 The first 12 bits are 0. They are the offset.
 
-The next 27 bits are all 1, making the index 134,217,72**7** (2^{27} - 1). This means we need to look at the 134,217,72**8**th entry (notice the 0-based indexing) of the page table (counting from the bottom). 
+The next 27 bits are all 1, making the index 134,217,72**7** ($2^{27} - 1$). This means we need to look at the 134,217,72**8**th entry (notice the 0-based indexing) of the page table (counting from the bottom).
 
 <div className="p-4 border-2 border-double text-center">
 ![Page Table Access Example](/posts/page-tables/img/ex1-2.svg)
@@ -327,4 +327,3 @@ Thanks for reading.
 - [Page Tables and Single-Level Paging](https://www.geeksforgeeks.org/computer-organization-architecture/page-tables-and-single-level-paging/)
 - [xv6 page table manual](https://xv6-guide.github.io/xv6-riscv-book/Ch3.S1.html)
 - [My chat with Gemini 3.8 Flash](https://share.gemini.google/pL5eQBWaoyKj)
-

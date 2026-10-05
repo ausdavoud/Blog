@@ -8,11 +8,11 @@ title: ""
 
 Hey stranger!
 
-In case you don’t know me, sneak a peek at <ComingSoon link={{ name: "about", href: "/about" }} className="inline-block underline text-on-background-muted" />.
+In case you don’t know me, sneak a peek at <ComingSoon name="about" className="inline-block underline text-on-background-muted" />.
 \
-Still interested? Read my [posts](/posts) and <ComingSoon link={{ name: "poems", href: "/poetry" }} className="inline-block underline text-on-background-muted" />.
+Still interested? Read my [posts](/posts) and <ComingSoon name="poems" className="inline-block underline text-on-background-muted" />.
 \
-Also, here’s a link to my <ComingSoon link={{ name: "CV", href: "https://github.com/ausdavoud" }} className="inline-block underline text-on-background-muted" />.
+Also, here’s a link to my <ComingSoon name="/kə-ˈri-kyə-ləm-ˈvē-ˌtī/" className="inline-block underline text-on-background-muted" />.
 
 Bye buddy 👋🏻
 </div>

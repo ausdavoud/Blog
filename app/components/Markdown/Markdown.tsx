@@ -62,10 +62,8 @@ export default function Markdown({
         mdxOptions: {
           useDynamicImport: true,
           rehypePlugins: [
-            //@ts-ignore
             rehypeKatex,
             [
-              // @ts-ignore -- next-mdx-remote and rehype-pretty-code use incompatible unified type versions
               rehypePrettyCode,
               {
                 keepBackground: false,
