@@ -1,5 +1,5 @@
 ---
-title: Welcome to my little corner
+title: Posts
 ---
 
 - [Page Tables — What MIT 6.828 Taught Me](/posts/page-tables)

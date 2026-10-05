@@ -16,10 +16,10 @@ export async function generateMetadata({ params }: { params: { slug: string | st
     else if (Array.isArray(params.slug))
         params.slug = params.slug.join(path.sep)
 
-    const { data } = await getPost(params.slug).catch(() => notFound())
+    const { data } = await getPost(params.slug, false).catch(() => notFound())
 
     return {
-        title: data.title,
+        ...(params.slug ? { title: data.title } : {}),
         description: data.spoiler || `${config.blog_name}'s post`,
         keywords: data.keywords || "",
         authors: getMdAuthors(data),

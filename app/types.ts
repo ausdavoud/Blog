@@ -32,6 +32,7 @@ export type NavLink = {
 
 export type Config = {
     blog_name: string,
+    site_title_prefix?: string,
     description: string,
     author?: Author,
     authors?: Author[],

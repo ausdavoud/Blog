@@ -11,7 +11,7 @@ import GoogleAnalytics from './components/GoogleAnalytics'
 export const metadata: Metadata = {
   metadataBase: new URL(config.site_url),
   title: {
-    default: config.blog_name,
+    default: [config.site_title_prefix, config.blog_name].filter(Boolean).join(' | '),
     template: `%s | ${config.blog_name}`,
   },
   icons: {
