@@ -54,7 +54,7 @@ export default async function Page({ params }: { params: { slug: string | string
                 {data.image && <img src={data.image} alt={data.title} className="w-full mb-4 rounded-md" />}
                 {(data.title || data.date) &&
                     <div className={(data.image ? "mb-2" : "my-6")}>
-                        {data.title && <h1 className="text-h2 sm:text-h1 leading-9 mb-1 block font-medium text-on-background-stronger">{data.title}</h1>}
+                        {data.title && <h1 className="text-h2 sm:text-h1 text-center lg:text-start leading-9 mb-1 block font-medium text-on-background-stronger">{data.title}</h1>}
                         {data.date &&
                             <h2 className="text-sm sm:text-base">
                                 {new Date(data.date || "").toLocaleDateString(getMdLanguage(data), {
