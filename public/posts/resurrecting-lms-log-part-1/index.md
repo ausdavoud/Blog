@@ -101,7 +101,7 @@ There’s an awesome course by BugBytes on NetNinja’s YouTube channel covering
 I also remember that Coding for Entrepreneurs had a tutorial on scraping with Celery. I’ll watch it first before kicking off the project. In the next part, we won’t dive into app development just yet—instead, we’ll focus on setting up the project structure and docs.  
 [https://www.youtube.com/watch?v=rfM3Jli81fU](https://www.youtube.com/watch?v=rfM3Jli81fU)
 
-As far as I know, our university LMS doesn’t have any IP restrictions, so requests from a single VPS shouldn’t get blocked. Still, it might be smart to build a Django app called "proxy" to find some solid free proxies we can use to mask our requests. I’m not sure how to implement proxies with Python requests—I’ve only heard about it. We might also need to tweak the User-Agent and other headers… but we’ll figure it out as we go!
+As far as I know, our university LMS doesn’t have any IP restrictions, so requests from a single VPS shouldn’t get blocked. Still, it might be smart to build a Django app called “proxy” to find some solid free proxies we can use to mask our requests. I’m not sure how to implement proxies with Python requests—I’ve only heard about it. We might also need to tweak the User-Agent and other headers… but we’ll figure it out as we go!
 
 I should also mention that the previous version of LMS Log, written in Python, used asynchronous requests with Aiohttp. I found JavaScript’s async/await system way more appealing, but here we are again—async Python. I might need to revisit [https://www.manning.com/books/python-concurrency-with-asyncio](https://www.manning.com/books/python-concurrency-with-asyncio).  
 Annnnnnd, I’m not really thrilled about diving back into that! :)

@@ -5,7 +5,7 @@ import config from "@/config";
 import ThemeIcon from "./ThemeIcon";
 import { useTheme } from "next-themes";
 import { ChevronDown, Menu } from "lucide-react";
-import { useContext, useEffect, useRef } from "react";
+import { useContext, useEffect } from "react";
 import SidebarContext from "./providers/sidebar";
 
 export function ComingSoon({ name, className, side = false }: { name: string, className: string, side?: boolean }) {
@@ -22,54 +22,43 @@ export default function Header({ sidebar }: { sidebar: boolean }) {
     const pathname = usePathname()
     const { theme, setTheme } = useTheme()
     const context = useContext(SidebarContext)
-    const headerRef = useRef<HTMLDivElement>(null)
 
     useEffect(() => {
         if (theme && theme !== "light" && theme !== "dark")
             setTheme(config.theme)
     }, [theme, setTheme])
-    useEffect(() => {
-        const header = headerRef.current
-        const nav = header?.querySelector('nav')
-        if (!header || !nav) return
-        const items = Array.from(nav.children)
-        const observer = new ResizeObserver(() => {
-            header.style.setProperty('--menu-item-width',
-                `${Math.max(0, ...items.map(item => item.getBoundingClientRect().width))}px`)
-        })
-        items.forEach(item => observer.observe(item))
-        return () => observer.disconnect()
-    }, [])
-    return <div ref={headerRef} className="site-header relative flex flex-wrap items-center gap-y-4 px-4 pr-14 md:px-0 md:pr-10 pt-3 md:pt-5 pb-2 w-full"
+    return <div className="site-header relative flex flex-col lg:flex-row lg:items-center gap-x-4 gap-y-4 px-4 pr-14 lg:px-0 lg:pr-10 pt-5 pb-2 w-full"
         style={{ direction: config.direction }}>
-        <div className="flex grow items-center gap-3 whitespace-nowrap">
+        <div className="flex grow w-[calc(100%+2.5rem)] lg:w-auto justify-center lg:justify-start items-center gap-3 whitespace-nowrap">
             {sidebar &&
                 <button onClick={context.toggle} className="xl:hidden text-on-background-muted">
                     <Menu />
                 </button>
             }
-            <Link className="text-name-sm sm:text-name flex font-bold items-center gap-2 md:gap-3"
+            <Link className="text-name flex font-bold items-center gap-2 md:gap-3"
                 href={'/'}>
                 {config.header.logo && <img className="w-logo h-logo sm:w-logo sm:h-logo" src={config.logo} alt="logo" />}
                 {config.header.blog_name && config.blog_name}
             </Link>
         </div>
-        <nav aria-label="Primary" className="header-nav flex shrink-0 max-w-[calc(100%+2.5rem)] flex-wrap gap-4 text-[24px] items-center">
+        <nav aria-label="Primary" className="header-nav flex shrink-0 w-[calc(100%+2.5rem)] lg:w-auto justify-center lg:justify-end flex-wrap gap-4 text-[24px] items-center">
             {config.header.nav_links?.map((link) => {
                 const isHere = [link, ...(link.children ?? [])].some(({ href }) =>
                     pathname === href || (href !== '/' && pathname.startsWith(`${href}/`)))
                 if (link.children?.length)
                     return <details key={link.href} className="group relative text-label"
                         onPointerEnter={(event) => {
-                            if (event.pointerType === 'mouse')
+                            if (event.pointerType === 'mouse' && window.matchMedia('(hover: hover)').matches)
                                 event.currentTarget.setAttribute('open', '')
                         }}
                         onPointerLeave={(event) => {
-                            if (event.pointerType === 'mouse')
+                            if (event.pointerType === 'mouse' && window.matchMedia('(hover: hover)').matches)
                                 event.currentTarget.removeAttribute('open')
                         }}
                         onBlur={(event) => {
-                            if (!event.currentTarget.contains(event.relatedTarget))
+                            // Clicking a non-focusable submenu item gives no next focus target.
+                            // Hiding details during that click can crash Chromium's renderer.
+                            if (event.relatedTarget && !event.currentTarget.contains(event.relatedTarget))
                                 event.currentTarget.removeAttribute('open')
                         }}
                         onKeyDown={(event) => {
@@ -78,7 +67,15 @@ export default function Header({ sidebar }: { sidebar: boolean }) {
                                 event.currentTarget.querySelector('summary')?.focus()
                             }
                         }}>
-                        <summary data-active={isHere} className="nav-item flex cursor-pointer list-none items-center gap-1 px-2 py-1 [&::-webkit-details-marker]:hidden">
+                        <summary data-active={isHere}
+                            onClick={(event) => {
+                                // Mouse hover already opens the menu; let touch and keyboard toggle it normally.
+                                if (event.detail > 0 && window.matchMedia('(hover: hover)').matches) {
+                                    event.preventDefault()
+                                    event.currentTarget.closest('details')?.setAttribute('open', '')
+                                }
+                            }}
+                            className="nav-item flex cursor-pointer list-none items-center gap-1 px-2 py-1 [&::-webkit-details-marker]:hidden">
                             {link.name}
                             <ChevronDown size={16} className="group-open:rotate-180" />
                         </summary>
@@ -108,7 +105,7 @@ export default function Header({ sidebar }: { sidebar: boolean }) {
         </nav>
         {
             config.header.theme_toggle &&
-            <button aria-label="Toggle color theme" className="absolute right-4 md:right-0 top-3 md:top-5 flex h-9 sm:h-[42px] items-center cursor-pointer" onClick={() => {
+            <button aria-label="Toggle color theme" className="absolute right-4 lg:right-0 top-5 flex h-9 sm:h-[42px] items-center cursor-pointer" onClick={() => {
                 setTheme(theme === "dark" ? "light" : "dark")
             }}>
                 <ThemeIcon theme={theme} />

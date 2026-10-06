@@ -4,7 +4,7 @@ date: 2026-09-19
 keywords: page tables, os
 ---
 
-> As much as I hate to say it, this post was written by a so-called human, and no AIs were used in crafting the original text. Fuck your "*It’s not* blah blah blah, *but* blah blah blah" clauses. 
+> As much as I hate to say it, this post was written by a so-called human, and no AIs were used in crafting the original text. Fuck your “*It’s not* blah blah blah, *but* blah blah blah” clauses. 
 
 
 # Prologue 
@@ -21,14 +21,14 @@ In this blog post, I’ll take you on the journey I took. We’ll go through pag
 
 So, let’s start. Shall we? 
 
-Imagine Sam has 64 petabytes of RAM. You have every right to ask how on earth he got it, given the current occupation of RAM manufacturing pipelines by giant —or soon-to-be— stock market surfers, to make the next ["Pelican riding the Tour de France"](https://simonwillison.net/tags/pelican-riding-a-bicycle/). Well, Sam is not human, so he can manage to have it all.
+Imagine Sam has 64 petabytes of RAM. You have every right to ask how on earth he got it, given the current occupation of RAM manufacturing pipelines by giant —or soon-to-be— stock market surfers, to make the next [“Pelican riding the Tour de France”](https://simonwillison.net/tags/pelican-riding-a-bicycle/). Well, Sam is not human, so he can manage to have it all.
 
 Jokes aside, Sam has asked you to help him make this HUGE amount of RAM accessible to his RISC-V Sv39 CPU. Can you help him? Bet you can’t, unless you’re the legendary [Robert Morris](https://en.wikipedia.org/wiki/Robert_Tappan_Morris). God, I love this guy. 
 
 So, come with me as I guide you through the most unrelated problem nobody cares about.
 
 # A little background 
-Remember I told you that Sam had 64 PB of RAM? But how many bytes is that? Turns out, "RAM storage units are defined by the [JEDEC standard](https://en.wikipedia.org/wiki/JEDEC_memory_standards) (who knows what it is), where 1 **KB** (`KIL-uh-bite`) of RAM is actually 1 **KiB** (`KIH-bee-bite`)." Yes, they are different (notice the ‘i’). Yes, RAM doesn’t care about the difference. 1 KB is 1,000 bytes, whereas 1 KiB is 1024 or $2^{10}$ bytes. The point is, in the world of RAM, both mean 1024.
+Remember I told you that Sam had 64 PB of RAM? But how many bytes is that? Turns out, “RAM storage units are defined by the [JEDEC standard](https://en.wikipedia.org/wiki/JEDEC_memory_standards) (who knows what it is), where 1 **KB** (`KIL-uh-bite`) of RAM is actually 1 **KiB** (`KIH-bee-bite`).” Yes, they are different (notice the ‘i’). Yes, RAM doesn’t care about the difference. 1 KB is 1,000 bytes, whereas 1 KiB is 1024 or $2^{10}$ bytes. The point is, in the world of RAM, both mean 1024.
 
 
 So if you go to Amazon and buy 16 **GB** of RAM, it’s actually 16 **GiB**, or $$16 \times 2^{30}  = 17,179,869,184 \ \text{bytes}$$, 
@@ -51,7 +51,7 @@ And another table would do the job of a thousand words:
 
 So, Sam’s 64 PB of RAM is $64 \times 2^{50}$ = $2^{56}$ bytes. That’s an enormous 18 quadrillion, 14 trillion, 398 billion, 509 million, 481 thousand, 984 bytes. Fuck you, Sam. 
 
-Anyway, the question is, "How is Sam going to handle this much memory?" And what do we mean by *handle*? Keep these two questions in mind, as this whole article is about to answer them.
+Anyway, the question is, “How is Sam going to handle this much memory?” And what do we mean by *handle*? Keep these two questions in mind, as this whole article is about to answer them.
 
 > A quick reminder that each process in your system likes to perceive that it has access to all the memory, starting from `0x0` and continuing until it hits the limit.\
 Plus, we must come up with a mechanism that prevents a process from accessing memory locations that belong to other processes or the kernel itself. 
@@ -139,7 +139,7 @@ $$2^{27} \times 2^{12} = 2^{39} \ \text{bytes} = 512 \ \text{GiB}$$
 So, to cut down the available memory, we limit how many page frames a process has access to: instead of
 $2^{44}$ pages-frames/process, we get to have $2^{27}$ page frames/process. But remember, there are still $2^{44}$ page frames in the whole system. We just give each process a smaller slice of it.
 
-Nowadays, it’s a reasonably high amount of RAM for a single process. Compared to the previous 64 petabytes, it is orders of magnitude smaller. But there is another problem. Yes, baby. Problem after problem. Page tables are like your girlfriend: they never run out of problems. But what now? Well, if you were smart enough, you’d have already realized that all these tables must also be stored somewhere. But where and how? Answering these questions will require its own blog post, but another immediate question would be: *"How much memory do we need to store a page table itself?"*
+Nowadays, it’s a reasonably high amount of RAM for a single process. Compared to the previous 64 petabytes, it is orders of magnitude smaller. But there is another problem. Yes, baby. Problem after problem. Page tables are like your girlfriend: they never run out of problems. But what now? Well, if you were smart enough, you’d have already realized that all these tables must also be stored somewhere. But where and how? Answering these questions will require its own blog post, but another immediate question would be: *“How much memory do we need to store a page table itself?”*
 
 # Enough Memory for a Page Table
 
@@ -174,7 +174,7 @@ So, are we sticking to this one-column table? No. In reality, we still need a se
 That is how wide a row is.
 
 Ummm, **54**... doesn’t really sound like a round number to me.
-For the sake of future efficiencies with CPU operations and instructions, we’d better work with multiples of 8 bits (1 byte). Since in RISC-V, the term "doubleword" is often used to refer to a 64-bit chunk (though the size varies by architecture), we’d like to extend 54 to **64** (and we don’t care about the extra wasted space).
+For the sake of future efficiencies with CPU operations and instructions, we’d better work with multiples of 8 bits (1 byte). Since in RISC-V, the term “doubleword” is often used to refer to a 64-bit chunk (though the size varies by architecture), we’d like to extend 54 to **64** (and we don’t care about the extra wasted space).
 
 
 As a result, we will have $2^{27}$ entries, each 8 *bytes* (**64** bits) long. That’s a table of size 
@@ -215,7 +215,7 @@ But don’t let them trick you for too long...
 ## Thou Shalt Not Fool Me!
 Don’t let these numbers trick you for too long. Even if the new method takes only 12 KiB for now, it doesn’t mean it’s always going to be this way. The thing is, this number can grow. 
 
-I’m sure you don’t have the slightest idea what I’m talking about, so let’s take an example. Imagine we have this app called "Wiggly Biggly." Throughout the execution of its instructions, it wants to access the virtual addresses `0x0000_0000_1000` and `0xFFFF_FFFF_F000`. Now let’s analyze the page table size in the two models:
+I’m sure you don’t have the slightest idea what I’m talking about, so let’s take an example. Imagine we have this app called “Wiggly Biggly.” Throughout the execution of its instructions, it wants to access the virtual addresses `0x0000_0000_1000` and `0xFFFF_FFFF_F000`. Now let’s analyze the page table size in the two models:
 
 1. Single-level Page Table
 
@@ -256,7 +256,7 @@ The next 27 bits are all 1, making the index 134,217,72**7** ($2^{27} - 1$). Thi
 
 </div> 
 
-Remember that we specified 8 bytes to each entry so the 134,217,728th entry will start at the $$134,217,728 \times 8 = 1,073,741,824 \text{th}$$ byte of the page table. This number is equal to 1 GiB. Our little "Wiggly Biggly" program requires a GIGABYTE of RAM, regardless of the fact that it asks for only two virtual addresses. We are just so unbelievably unlucky that one of them is so large. 
+Remember that we specified 8 bytes to each entry so the 134,217,728th entry will start at the $$134,217,728 \times 8 = 1,073,741,824 \text{th}$$ byte of the page table. This number is equal to 1 GiB. Our little “Wiggly Biggly” program requires a GIGABYTE of RAM, regardless of the fact that it asks for only two virtual addresses. We are just so unbelievably unlucky that one of them is so large. 
 
 Of course, this example is a bit exaggerated, but it demonstrates the catastrophic consequences of the single-level page table. So we conclude that the **minimum** and **maximum** page table sizes in this model are **both** 1 GiB. 
 
@@ -290,7 +290,7 @@ Note that at each level, the data in the `PPN` column points to the physical add
 
 This time, we occupied the topmost entry of each page table too, but each table is only 4 KiB in size (instead of 1 GiB). So, we have occupied only 12 KiB. As a result, our optimization has **lowered** the **minimum** storage required for a page table, though the **maximum** still **remains at 1 GiB** —and a bit more. 
 
-"How is the maximum still 1 GiB?" I hear you ask. 
+“How is the maximum still 1 GiB?” I hear you ask. 
 
 Well, currently each page table has one entry, but if it grew and wanted to access every 4 KiB page across the whole 512 GiB, things would go a bit differently. In that case, the first page table would be filled. That’s a total of 4 KiB. 
 

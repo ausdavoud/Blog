@@ -100,7 +100,7 @@ Gemini:
 1. **The Problem: MIME Type Ambiguity and Browser Heuristics**
     - At its core, HTTP relies on the `Content-Type` header (e.g., `text/html`, `image/jpeg`, `application/javascript`) sent by the server to tell the browser how to interpret the bytes received in the response body.
     - However, servers might misconfigure the `Content-Type`, omit it, or send a generic one like `application/octet-stream` or `text/plain`.
-    - Historically, browsers implemented "MIME sniffing" heuristics to handle these cases. They would examine the first few bytes of the response body, looking for patterns (magic numbers or specific byte sequences) that indicate a particular file type.
+    - Historically, browsers implemented “MIME sniffing” heuristics to handle these cases. They would examine the first few bytes of the response body, looking for patterns (magic numbers or specific byte sequences) that indicate a particular file type.
         - For example, seeing `<html>` might suggest HTML.
         - Seeing `GIF89a` suggests a GIF image.
         - Seeing patterns common in JavaScript code might suggest `application/javascript`.
@@ -108,7 +108,7 @@ Gemini:
 
 2. **The Security Risk: Content Injection and XSS**
 	- **Scenario:** Imagine a site lets users upload profile descriptions, intending to display them as plain text. The server stores the description and serves it with `Content-Type: text/plain`.
-	- **Attack:** An attacker uploads a "description" that is actually HTML containing malicious JavaScript: `<script>/* steal cookies */</script>`.
+	- **Attack:** An attacker uploads a “description” that is actually HTML containing malicious JavaScript: `<script>/* steal cookies */</script>`.
 	- **Without `nosniff`:** When another user views the attacker’s profile, the server sends the malicious string with `Content-Type: text/plain`. However, the victim’s browser, performing MIME sniffing, sees the `<script>` tag. It ignores the `text/plain` header, decides the content is actually HTML/script, and executes the JavaScript within the context of the victim’s session on that site. This is a classic Cross-Site Scripting (XSS) attack. The attacker could steal session cookies, make requests on the user’s behalf, etc.
 
 So. Let’s do a bit of experimenting to see if we can actually perform an XSS attack to our website!

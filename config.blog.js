@@ -1,6 +1,6 @@
 const config = {
     blog_name: 'Davoud Nosrati',
-    site_title_prefix: 'Blog',
+    // site_title_prefix: 'Blog',
     description: 'Random Computer Science Stuff',
     theme: 'light',
     logo: "/logo.png",

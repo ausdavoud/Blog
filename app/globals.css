@@ -21,10 +21,6 @@ img {
   object-fit: cover;
 }
 
-.site-header {
-  column-gap: var(--menu-item-width, 5rem);
-}
-
 .header-nav .nav-item {
   color: var(--on-background-muted);
   transition: color 150ms ease;
