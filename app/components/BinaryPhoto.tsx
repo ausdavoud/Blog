@@ -29,7 +29,15 @@ export default function BinaryPhoto({ src, alt }: { src: string, alt: string }) 
     }, [hovered, size])
 
     return <div ref={frame} className="binary-photo" data-hovered={hovered}
-        onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}>
+        onPointerEnter={(event) => {
+            if (event.pointerType === 'mouse') setHovered(true)
+        }}
+        onPointerLeave={(event) => {
+            if (event.pointerType === 'mouse') setHovered(false)
+        }}
+        onPointerDown={(event) => {
+            if (event.pointerType !== 'mouse') setHovered(active => !active)
+        }}>
         <img className="w-full !mb-0 dark:border dark:border-gray-700 rounded-md" src={src} alt={alt} />
         <div className="binary-frame" aria-hidden="true">
             <span className="binary-zero binary-zero-tl">0</span>
