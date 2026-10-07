@@ -6,9 +6,13 @@ const config: Config = {
     './components/**/*.{js,ts,jsx,tsx,mdx,md}',
     './app/**/*.{js,ts,jsx,tsx,mdx,md}',
     './public/**/*.{js,ts,jsx,tsx,mdx,md}',
+    './node_modules/liquid-glass-react/dist/index.esm.js',
   ],
   theme: {
     extend: {
+      screens: {
+        tablet: '768px',
+      },
       colors: {
         'background': 'var(--background)',
         'on-background': 'var(--on-background)',

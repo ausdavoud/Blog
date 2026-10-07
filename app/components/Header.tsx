@@ -27,9 +27,9 @@ export default function Header({ sidebar }: { sidebar: boolean }) {
         if (theme && theme !== "light" && theme !== "dark")
             setTheme(config.theme)
     }, [theme, setTheme])
-    return <div className="site-header relative flex flex-col lg:flex-row lg:items-center gap-x-4 gap-y-4 px-4 pr-14 lg:px-0 lg:pr-10 pt-5 pb-2 w-full"
+    return <div className="site-header relative flex flex-col tablet:flex-row tablet:items-center gap-x-4 gap-y-4 px-4 pr-14 tablet:px-0 tablet:pr-10 pt-5 pb-2 w-full"
         style={{ direction: config.direction }}>
-        <div className="flex grow w-[calc(100%+2.5rem)] lg:w-auto justify-center lg:justify-start items-center gap-3 whitespace-nowrap">
+        <div className="flex grow w-[calc(100%+2.5rem)] tablet:w-auto justify-center tablet:justify-start items-center gap-3 whitespace-nowrap">
             {sidebar &&
                 <button onClick={context.toggle} className="xl:hidden text-on-background-muted">
                     <Menu />
@@ -41,7 +41,7 @@ export default function Header({ sidebar }: { sidebar: boolean }) {
                 {config.header.blog_name && config.blog_name}
             </Link>
         </div>
-        <nav aria-label="Primary" className="header-nav flex shrink-0 w-[calc(100%+2.5rem)] lg:w-auto justify-center lg:justify-end flex-wrap gap-4 text-[24px] items-center">
+        <nav aria-label="Primary" className="header-nav flex shrink-0 w-[calc(100%+2.5rem)] tablet:w-auto justify-center tablet:justify-end flex-wrap gap-4 text-[24px] items-center">
             {config.header.nav_links?.map((link) => {
                 const isHere = [link, ...(link.children ?? [])].some(({ href }) =>
                     pathname === href || (href !== '/' && pathname.startsWith(`${href}/`)))
@@ -105,7 +105,7 @@ export default function Header({ sidebar }: { sidebar: boolean }) {
         </nav>
         {
             config.header.theme_toggle &&
-            <button aria-label="Toggle color theme" className="absolute right-4 lg:right-0 top-5 flex h-9 sm:h-[42px] items-center cursor-pointer" onClick={() => {
+            <button aria-label="Toggle color theme" className="absolute right-4 tablet:right-0 top-5 flex h-9 sm:h-[42px] items-center cursor-pointer" onClick={() => {
                 setTheme(theme === "dark" ? "light" : "dark")
             }}>
                 <ThemeIcon theme={theme} />

@@ -1,0 +1,22 @@
+.posts-title-fallback {
+  position: absolute;
+  transform: translate(-50%, -50%);
+}
+
+.posts-title .glass > div {
+  font-family: inherit !important;
+}
+
+@media (prefers-reduced-transparency: reduce), (prefers-contrast: more), (forced-colors: active) {
+  .posts-title .glass {
+    background: var(--background);
+    border: 1px solid currentColor;
+    box-shadow: none !important;
+  }
+  .posts-title .glass__warp, .posts-title > span { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .posts-title * { transition: none !important; }
+  .posts-title > div, .posts-title > span { transform: translate(-50%, -50%) !important; }
+}
