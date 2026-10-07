@@ -49,7 +49,7 @@ function SidebarItem({ item, render }: { item: SidebarData, render: (children: R
         <div className={clsx("w-[280px] py-2 px-4 rounded",
             pathname === item.url && "bg-surface text-primary cursor-default")}>
             <div className="flex justify-between items-center">
-                <Link href={item.url} className="grow">{item.name}</Link>
+                <Link href={item.url} prefetch className="grow">{item.name}</Link>
                 {item.children &&
                     <button className="border-l pl-3 border-outline cursor-pointer"
                         onClick={() => setOpen(prev => !prev)}>

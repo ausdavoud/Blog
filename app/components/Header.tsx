@@ -36,7 +36,7 @@ export default function Header({ sidebar }: { sidebar: boolean }) {
                 </button>
             }
             <Link className="text-name flex font-bold items-center gap-2 md:gap-3"
-                href={'/'}>
+                href={'/'} prefetch>
                 {config.header.logo && <img className="w-logo h-logo sm:w-logo sm:h-logo" src={config.logo} alt="logo" />}
                 {config.header.blog_name && config.blog_name}
             </Link>
@@ -77,13 +77,13 @@ export default function Header({ sidebar }: { sidebar: boolean }) {
                             }}
                             className="nav-item flex cursor-pointer list-none items-center gap-1 px-2 py-1 [&::-webkit-details-marker]:hidden">
                             {link.name}
-                            <ChevronDown size={16} className="group-open:rotate-180" />
+                            <ChevronDown size={16} className="transition-transform duration-200 motion-reduce:transition-none group-open:rotate-180" />
                         </summary>
-                        <div className="absolute end-0 top-full z-10 min-w-36 pt-2">
+                        <div className="absolute end-0 top-full z-10 w-max pt-2">
                             <div className="nav-glass rounded py-1 shadow-lg">
                                 {link.children.map((child) => child.disabled
                                     ? <ComingSoon key={child.href} name={child.name} side className="block px-3 py-2" />
-                                    : <Link key={child.href} href={child.href}
+                                    : <Link key={child.href} href={child.href} prefetch
                                     aria-current={pathname === child.href ? 'page' : undefined}
                                     data-active={pathname === child.href}
                                     className="nav-item block px-3 py-2"
@@ -99,7 +99,7 @@ export default function Header({ sidebar }: { sidebar: boolean }) {
                     aria-current={pathname === link.href ? 'page' : undefined}
                     data-active={isHere}
                     className="nav-item px-2 py-1 text-label block first:pl-0"
-                    href={link.href}>{link.name}
+                    href={link.href} prefetch>{link.name}
                 </Link>
             })}
         </nav>

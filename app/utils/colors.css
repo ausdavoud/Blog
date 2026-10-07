@@ -3,7 +3,7 @@ html {
   --on-background: #242424;
   --on-background-stronger: #101010;
   --on-background-muted: #7a7a7a;
-  --primary: #bc00eb;
+  --primary: var(--link-hover);
 
   --outline: #dcdcdc;
 
@@ -16,8 +16,8 @@ html {
 
   --surface: #eee3f1;
 
-  --link: #1f668c;
-  --link-hover: #0994df;
+  --link: #0078d4;
+  --link-hover: #005fb8;
 }
 
 html.dark {
@@ -25,7 +25,7 @@ html.dark {
   --on-background-stronger: #f8f8f8;
   --on-background: #dedede;
   --on-background-muted: #a5a0a8;
-  --primary: #d157e9;
+  --primary: var(--link-hover);
   --outline: #303532;
 
   --code-bg: #191f1f;
@@ -37,6 +37,6 @@ html.dark {
 
   --surface: #1e1e20;
 
-  --link: #609dcb;
-  --link-hover: #40a9f9;
+  --link: #48b3ff;
+  --link-hover: #85ccff;
 }
