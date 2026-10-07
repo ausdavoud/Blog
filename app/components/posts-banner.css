@@ -3,20 +3,111 @@
   transform: translate(-50%, -50%);
 }
 
+.posts-glass-content {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  color: white;
+  font-weight: 500;
+  text-shadow: 0 2px 12px rgb(0 0 0 / 60%);
+}
+
+.posts-title .posts-glass-content h1,
+.markdown .posts-title .posts-glass-name a {
+  font-family: inherit;
+  font-weight: inherit;
+  text-shadow: inherit;
+}
+
+.posts-glass-name {
+  max-width: 0;
+  opacity: 0;
+  overflow: visible;
+  pointer-events: none;
+  white-space: nowrap;
+  font-size: 20px;
+  transition: max-width 300ms ease, opacity 200ms ease, padding 300ms ease;
+}
+
+.markdown .posts-title .posts-glass-name a,
+.markdown .posts-title .posts-glass-name a:hover {
+  color: white;
+  text-decoration: none;
+}
+
+.posts-title[data-docked='true'] .posts-glass-name {
+  max-width: 240px;
+  padding-right: 24px;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Fade the photo above the SVG warp, below the text, without filtering its opacity. */
+.posts-title .glass::after {
+  content: '';
+  position: absolute;
+  z-index: 0;
+  pointer-events: none;
+  inset: -12px;
+  background: url('/posts/pink-sky.webp') center bottom / cover;
+  filter: blur(var(--photo-blur)) saturate(140%);
+  opacity: 0;
+  transition: opacity 600ms ease;
+}
+
+.posts-title[data-docked='true'] .glass::after {
+  opacity: 0.85;
+}
+
+.posts-title .glass {
+  background: rgb(36 36 36 / 15%);
+}
+
+.posts-title .posts-glass-content h1 {
+  transition: font-size 300ms ease;
+}
+
+.posts-title[data-docked='true'] .posts-glass-content h1 {
+  font-size: 24px;
+}
+
+@media (max-width: 380px) {
+  .posts-glass-name { font-size: 16px; }
+  .posts-title[data-docked='true'] .posts-glass-name { padding-right: 16px; }
+}
+
 .posts-title .glass > div {
   font-family: inherit !important;
 }
 
+/* Position each glass layer directly; a fixed ancestor cuts off its backdrop. */
+.posts-title > div,
+.posts-title > span {
+  transition: transform 300ms ease !important;
+}
+
+.posts-title[data-docked='true'] > div,
+.posts-title[data-docked='true'] > span {
+  z-index: 20;
+}
+
+/* Keep the package's separate rim layers sized to the animated content. */
+.posts-title[style*='--glass-width'] > span,
+.posts-title[style*='--glass-width'] > div:not(:has(.glass)) {
+  width: var(--glass-width) !important;
+  height: var(--glass-height) !important;
+}
+
 @media (prefers-reduced-transparency: reduce), (prefers-contrast: more), (forced-colors: active) {
   .posts-title .glass {
-    background: var(--background);
+    background: var(--background) !important;
     border: 1px solid currentColor;
     box-shadow: none !important;
   }
-  .posts-title .glass__warp, .posts-title > span { display: none; }
+  .posts-title .glass__warp, .posts-title .glass::after, .posts-title > span { display: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .posts-title * { transition: none !important; }
+  .posts-title *, .posts-title *::after { transition: none !important; }
   .posts-title > div, .posts-title > span { transform: translate(-50%, -50%) !important; }
 }
