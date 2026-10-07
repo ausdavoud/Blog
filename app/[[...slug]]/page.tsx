@@ -50,7 +50,7 @@ export default async function Page({ params }: { params: { slug: string | string
         }
         <div className="flex flex-col items-center grow max-w-post w-full">
             <Header sidebar={showSidebar !== undefined} />
-            <main className={`${params.slug === "" ? "flex flex-col justify-center" : ""} flex-1 py-4 px-4 md:px-1 pt-2 pb-8 w-full`} style={{ direction: getMdDirection(data) }}>
+            <main className={`${params.slug === "" ? "flex flex-col justify-center py-2" : "pt-2 pb-8"} flex-1 px-4 md:px-1 w-full`} style={{ direction: getMdDirection(data) }}>
                 {data.image && <img src={data.image} alt={data.title} className="w-full mb-4 rounded-md" />}
                 {(data.title || data.date) &&
                     <div className={(data.image ? "mb-2" : "my-6")}>

@@ -77,7 +77,7 @@ export default function Header({ sidebar }: { sidebar: boolean }) {
                             }}
                             className="nav-item flex cursor-pointer list-none items-center gap-1 px-2 py-1 [&::-webkit-details-marker]:hidden">
                             {link.name}
-                            <ChevronDown size={16} className="transition-transform duration-200 motion-reduce:transition-none group-open:rotate-180" />
+                            <ChevronDown size={16} className="relative top-px transition-transform duration-200 motion-reduce:transition-none group-open:rotate-180" />
                         </summary>
                         <div className="absolute end-0 top-full z-10 w-max pt-2">
                             <div className="nav-glass rounded py-1 shadow-lg">
