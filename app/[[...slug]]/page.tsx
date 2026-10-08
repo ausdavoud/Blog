@@ -81,5 +81,5 @@ export async function generateStaticParams() {
     const posts = await getAllPosts({ recursive: true, self: true, log: true })
     return posts.map((post: PostData) => ({
         slug: post.slug.split(path.sep).slice(1),
-    }))
+    })).filter(({ slug }) => slug.join('/') !== 'posts')
 }
