@@ -92,7 +92,7 @@ export async function getPost(slug: string, fetchComponents = true): Promise<{ c
     try {
         components = await import(`../../public/${componentsPath}.js`)
     } catch (e: any) {
-        if (!e || e.code !== "MODULE_NOT_FOUND") {
+        if (!e || !["MODULE_NOT_FOUND", "ERR_MODULE_NOT_FOUND"].includes(e.code)) {
             throw e
         }
     }
