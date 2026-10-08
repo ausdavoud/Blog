@@ -10,7 +10,8 @@ import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
 import { getSidebarData, hasSidebar } from "../actions/sidebar";
 
-export async function generateMetadata({ params }: { params: { slug: string | string[] } }) {
+export async function generateMetadata({ params: routeParams }: { params: Promise<{ slug?: string | string[] }> }) {
+    const params = await routeParams
     if (params.slug === undefined)
         params.slug = ""
     else if (Array.isArray(params.slug))
@@ -32,7 +33,8 @@ export async function generateMetadata({ params }: { params: { slug: string | st
     }
 }
 
-export default async function Page({ params }: { params: { slug: string | string[] } }) {
+export default async function Page({ params: routeParams }: { params: Promise<{ slug?: string | string[] }> }) {
+    const params = await routeParams
     if (params.slug === undefined)
         params.slug = ""
     if (Array.isArray(params.slug))

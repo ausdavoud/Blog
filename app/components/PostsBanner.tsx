@@ -7,7 +7,6 @@ import config from '@/config'
 import './posts-banner.css'
 
 // The package reads navigator during render, so load it only in the browser.
-// ponytail: 1.1.1 uses a scoped React 18 peer override; remove it when upgrading React.
 const LiquidGlass = dynamic(() => import('liquid-glass-react'), {
     ssr: false,
     loading: () => <h1 className="posts-title-fallback !m-0">Posts</h1>,
