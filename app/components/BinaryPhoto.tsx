@@ -18,6 +18,15 @@ export default function BinaryPhoto({ src, alt }: { src: string, alt: string }) 
     }, [])
 
     useEffect(() => {
+        if (!hovered) return
+        const stopOutside = (event: PointerEvent) => {
+            if (!frame.current?.contains(event.target as Node)) setHovered(false)
+        }
+        document.addEventListener('pointerdown', stopOutside, true)
+        return () => document.removeEventListener('pointerdown', stopOutside, true)
+    }, [hovered])
+
+    useEffect(() => {
         if (!hovered || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
         const randomize = () => {
             setBits([size.width, size.height, size.width, size.height].map(length =>
