@@ -17,7 +17,6 @@ const authorSchema = z.union([
 
 const frontmatterSchema = z.object({
     title: z.string({ message: "invalid title" }),
-    hide_title: z.boolean().optional(),
     spoiler: z.coerce.string().optional(),
     keywords: z.coerce.string().optional(),
     date: z.date().optional(),

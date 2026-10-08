@@ -8,7 +8,6 @@ import remarkMath from "remark-math";
 import PostCard from "../PostCard";
 import { ComingSoon } from "../Header";
 import BinaryPhoto from "../BinaryPhoto";
-import PostsBanner from "../PostsBanner";
 import MarkdownLink from "./MarkdownLink";
 
 type MarkdownNode = {
@@ -59,7 +58,7 @@ export default function Markdown({
   return (
     <MDXRemote
       source={source}
-      components={{ a: MarkdownLink, ...components, PostCard, ComingSoon, BinaryPhoto, PostsBanner }}
+      components={{ a: MarkdownLink, ...components, PostCard, ComingSoon, BinaryPhoto }}
       options={{
         mdxOptions: {
           useDynamicImport: true,

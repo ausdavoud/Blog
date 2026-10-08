@@ -1,9 +1,7 @@
 ---
 title: Posts
-hide_title: true
+image: /posts/pink-sky.webp
 ---
-
-<PostsBanner />
 
 <div className="post-list">
 

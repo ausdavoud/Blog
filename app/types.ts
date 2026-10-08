@@ -2,7 +2,6 @@ export type Direction = 'ltr' | 'rtl'
 
 export type PostData = {
     title: string,
-    hide_title?: boolean,
     slug: string,
     date?: string,
     dir?: Direction,

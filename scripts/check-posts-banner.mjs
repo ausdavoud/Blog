@@ -1,4 +1,4 @@
-// Run from cua_repl with a localhost /posts tab:
+// Run from cua_repl with a localhost /posts-glass tab:
 // const { checkPostsBanner } = await import('file:///Users/davoud/dev/Blog/scripts/check-posts-banner.mjs')
 // await checkPostsBanner(tab)
 import assert from 'node:assert/strict'
@@ -21,25 +21,23 @@ export async function checkPostsBanner(tab) {
     })
     assert.equal((await read()).docked, 'false')
     for (let i = 0; i < 3; i++) {
-        const state = await read()
-        const point = [state.width - 20, state.height - 100]
-        await tab.scroll(point, 'down', (state.anchor - 46.5) / state.height)
-        await tab.getAXState({ emit: false })
+        for (let step = 0; step < 60 && (await read()).docked !== 'true'; step++) {
+            await tab.pressKey(null, 'Down')
+            await tab.getAXState({ emit: false })
+        }
         let current = await read()
         assert.equal(current.docked, 'true', 'The badge must expand above the cutoff')
         assert.equal(current.nameHidden, 'false')
         assert.match(current.blur, /blur\(/)
         assert.equal(current.overflow, false)
 
-        // Its bottom re-enters at 48px before its top does: the original stuck-state bug.
-        await tab.scroll(point, 'up', 1 / state.height)
+        await tab.pressKey(null, 'Home')
         await tab.getAXState({ emit: false })
-        assert.equal((await read()).docked, 'false', 'A one-pixel reversal must collapse the bar')
-        await tab.scroll(point, 'up', 72 / state.height)
-        await tab.getAXState({ emit: false })
-        assert.equal((await read()).docked, 'false', 'The bar must remain collapsed above the banner')
+        assert.equal((await read()).docked, 'false', 'Returning to the top must collapse the bar')
+        assert.equal((await read()).nameHidden, 'true')
+        assert.equal(await tab.playwright.locator('.compact-site-header').count(), 0, 'The current navbar must not overlap the glass design')
     }
     await tab.pressKey(null, 'Home')
     await tab.getAXState({ emit: false })
-    return 'Three one-pixel reversals passed; blur remains enabled and no horizontal overflow.'
+    return 'Three scroll reversals passed; blur remains enabled, no overlapping navbar or horizontal overflow.'
 }

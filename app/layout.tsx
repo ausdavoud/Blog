@@ -37,7 +37,7 @@ export default function RootLayout({
           <div className="flex flex-1 w-full justify-center gap-8">
             {children}
           </div>
-          <footer className="w-full max-w-post px-4 md:px-1 py-2 text-center text-sm text-on-background-muted">
+          <footer className="w-[calc(100%-4rem)] max-w-post py-2 text-center text-sm text-on-background-muted">
             2026 · Made on top of <a target="_blank" rel="noopener noreferrer" href="https://github.com/mohammad-mallaee/blogger" className="underline hover:text-on-background">blogger</a>
           </footer>
         </Providers>
