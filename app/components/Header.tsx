@@ -5,7 +5,7 @@ import config from "@/config";
 import ThemeIcon from "./ThemeIcon";
 import { useTheme } from "next-themes";
 import { ChevronDown, Menu } from "lucide-react";
-import { useContext, useEffect, useRef, useState, type HTMLAttributes } from "react";
+import { ReactNode, useContext, useEffect, useRef, useState, type HTMLAttributes } from "react";
 import "./compact-navigation.css";
 import SidebarContext from "./providers/sidebar";
 
@@ -39,9 +39,9 @@ const keepOpenOnMouseClick: HTMLAttributes<HTMLElement>['onClick'] = (event) => 
     }
 }
 
-export function ComingSoon({ name, className, side = false }: { name: string, className: string, side?: boolean }) {
-    return <span role="link" aria-label={name} aria-disabled="true" className={`group/soon nav-item relative cursor-default ${className}`}>
-        {name}
+export function ComingSoon({ children, className, side = false }: { children: ReactNode, className: string, side?: boolean }) {
+    return <span role="link" aria-disabled="true" className={`group/soon nav-item relative cursor-default ${className}`}>
+        {children}
         <span className={`nav-glass pointer-events-none absolute z-20 hidden w-fit rounded px-2 py-1 text-[9px] leading-none whitespace-nowrap group-hover/soon:block ${side ? "right-full top-1/2 -translate-y-1/2 mr-2" : "left-1/2 top-full -translate-x-1/2 mt-2"}`}>
             <span aria-hidden="true" className={`absolute h-2 w-2 rotate-45 bg-inherit border-outline ${side ? "-right-1.5 top-1/2 -translate-y-1/2 border-t border-r [clip-path:polygon(0_0,100%_0,100%_100%)]" : "-top-1.5 left-1/2 -translate-x-1/2 border-t border-l [clip-path:polygon(0_0,100%_0,0_100%)]"}`} />
             Coming soon
@@ -91,7 +91,7 @@ export default function Header({ sidebar, compactNavigation = true }: { sidebar:
                 <div className="absolute end-0 top-full z-10 w-max pt-2">
                     <div className="nav-glass rounded py-1 shadow-lg">
                         {link.children.map((child) => child.disabled
-                            ? <ComingSoon key={child.href} name={child.name} side className="block px-3 py-2" />
+                          ? <ComingSoon key={child.href} side className="block px-3 py-2">{child.name}</ComingSoon>
                             : <Link key={child.href} href={child.href} prefetch
                             aria-current={pathname === child.href ? 'page' : undefined}
                             data-active={pathname === child.href}
@@ -103,7 +103,7 @@ export default function Header({ sidebar, compactNavigation = true }: { sidebar:
                 </div>
             </details>
         if (link.disabled)
-            return <ComingSoon key={link.href} name={link.name} className="px-2 py-1 text-label block first:pl-0" />
+          return <ComingSoon key={link.href} className="px-2 py-1 text-label block first:pl-0">{link.name}</ComingSoon>
         return <Link key={link.href}
             aria-current={pathname === link.href ? 'page' : undefined}
             data-active={isHere}
