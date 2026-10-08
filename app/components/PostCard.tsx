@@ -4,7 +4,7 @@ import { getMdDirection } from "../actions/mdProperties"
 import { getPost } from "../actions/posts"
 
 const PostCard = async ({ post }: { post: string | PostData }) => {
-    const data = typeof post === "string" ? { ...(await getPost(post, false)).data, slug: post } : post
+    const data = typeof post === "string" ? { ...(await getPost(post)).data, slug: post } : post
     const date = data.date ? new Date(data.date).toISOString().slice(0, 10) : undefined
     return (
         <Link className="post-row" href={data.slug} prefetch>

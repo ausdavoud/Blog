@@ -17,7 +17,7 @@ export async function generateMetadata({ params: routeParams }: { params: Promis
     else if (Array.isArray(params.slug))
         params.slug = params.slug.join(path.sep)
 
-    const { data } = await getPost(params.slug, false).catch(() => notFound())
+    const { data } = await getPost(params.slug).catch(() => notFound())
 
     return {
         ...(params.slug ? { title: data.title } : {}),

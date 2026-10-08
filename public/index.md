@@ -12,7 +12,7 @@ In case you don’t know me, sneak a peek at <ComingSoon name="about" className=
 \
 Still interested? Read my <a href="/posts" className="underline">posts</a> and <ComingSoon name="poems" className="inline-block underline text-on-background-muted" />.
 \
-Also, here’s a link to my <ComingSoon name="/kə-ˈri-kyə-ləm-ˈvē-ˌtī/" className="inline-block underline text-on-background-muted" />.
+Also, here’s a link to my <ComingSoon name="CV" className="inline-block underline text-on-background-muted" />
 
 Bye buddy 👋🏻
 </div>

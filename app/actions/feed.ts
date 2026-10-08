@@ -24,7 +24,7 @@ export async function generateFeed() {
     let posts = await getLatestPosts({ recursive: true, self: true })
     posts = posts.slice(0, 20)
     for (const post of posts) {
-        const data = await getPost(post.slug, false)
+        const data = await getPost(post.slug)
         feed.addItem({
             title: post.title,
             id: post.slug,
