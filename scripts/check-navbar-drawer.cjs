@@ -206,6 +206,21 @@ assert.ok(!drawer.inert)
 assert.equal(findAll(renderHeader(), node => node.type === 'nav')[0].props['data-compact'], false)
 viewportWidth = 1024
 
+// DN starts the desktop hover expansion; the whole navbar owns its dismissal.
+reset()
+pathname = '/posts/page-tables'
+renderHeader()
+scroll(true)
+const primaryNav = () => findAll(renderHeader(), node => node.type === 'nav')[0]
+assert.equal(primaryNav().props.onPointerEnter, undefined, 'Entering the navbar must not trigger name expansion')
+assert.equal(headerBrand().props.hovered, false)
+headerBrand().props.onHover()
+assert.equal(headerBrand().props.hovered, true)
+primaryNav().props.onPointerLeave({ pointerType: 'touch' })
+assert.equal(headerBrand().props.hovered, true, 'Touch events must not dismiss the desktop hover')
+primaryNav().props.onPointerLeave({ pointerType: 'mouse' })
+assert.equal(headerBrand().props.hovered, false, 'Leaving the whole navbar must end the desktop expansion')
+
 // A completed hold lasts while reading, but returning to the top restores scroll compaction.
 for (const width of [390, 768]) {
     reset()
@@ -245,6 +260,7 @@ reset()
 let navigations = 0
 const brandProps = {
     name: 'Davoud Nosrati', compact: true, expanded: false,
+    hovered: false, onHover() { brandProps.hovered = true },
     onExpandedChange(expanded) { brandProps.expanded = expanded },
     onNavigate() { navigations++ },
 }
@@ -301,8 +317,9 @@ renderBrand().props.onPointerDown(touch)
 reset()
 assert.equal(timers.size, 0)
 renderBrand().props.onPointerEnter({ pointerType: 'mouse' })
+renderBrand().props.onPointerLeave()
 assert.ok(findAll(renderBrand(), node => node.props.className?.includes('transition-brand'))
-    .every(node => node.props.className.includes('nav:grid-cols-drawer-open')), 'Desktop hover still expands the brand above the mobile breakpoint')
+    .every(node => node.props.className.includes('nav:grid-cols-drawer-open')), 'Leaving DN for another navbar item must preserve the expansion')
 reset()
 
 console.log('Navbar order, drawer transitions, dropdowns, long-press scroll reset, and theme rotation passed.')

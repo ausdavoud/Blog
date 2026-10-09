@@ -13,14 +13,15 @@ const navItem = 'nav-item rounded-nav-item font-medium whitespace-nowrap transit
 
 const NAV_TRANSITION_MS = 300
 
-function MorphingBrand({ name, compact, expanded, onExpandedChange, onNavigate }: {
+function MorphingBrand({ name, compact, expanded, hovered, onHover, onExpandedChange, onNavigate }: {
     name: string
     compact: boolean
     expanded: boolean
+    hovered: boolean
+    onHover: () => void
     onExpandedChange: (expanded: boolean) => void
     onNavigate: MouseEventHandler<HTMLAnchorElement>
 }) {
-    const [hovered, setHovered] = useState(false)
     const root = useRef<HTMLAnchorElement>(null)
     const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
     const pressStart = useRef<{ x: number; y: number } | null>(null)
@@ -81,8 +82,8 @@ function MorphingBrand({ name, compact, expanded, onExpandedChange, onNavigate }
                 const start = pressStart.current
                 if (start && Math.hypot(event.clientX - start.x, event.clientY - start.y) > 10) cancelPress()
             }}
-            onPointerEnter={event => { if (event.pointerType === 'mouse') setHovered(true) }}
-            onPointerLeave={() => { setHovered(false); cancelPress() }}
+            onPointerEnter={event => { if (event.pointerType === 'mouse') onHover() }}
+            onPointerLeave={cancelPress}
             onContextMenu={event => { if (pressStart.current || suppressClick.current) event.preventDefault() }}
             onClick={event => {
                 if (suppressClick.current) {
@@ -277,6 +278,7 @@ export default function Header() {
     const [{ compact, moving }, setDrawer] = useState({ compact: false, moving: false })
     const [narrow, setNarrow] = useState(false)
     const [brandExpanded, setBrandExpanded] = useState(false)
+    const [brandHovered, setBrandHovered] = useState(false)
     const navigationCompact = compact || (narrow && brandExpanded)
     const links = config.header.nav_links ?? []
     const matches = (href: string) => pathname === href || (href !== '/' && pathname.startsWith(`${href}/`))
@@ -352,6 +354,7 @@ export default function Header() {
                     aria-label="Primary"
                     className="morph-site-header pointer-events-auto relative grid w-max max-w-full grid-cols-[max-content_auto] items-center rounded-nav border border-transparent p-1"
                     data-compact={navigationCompact}
+                    onPointerLeave={event => { if (event.pointerType === 'mouse') setBrandHovered(false) }}
                     dir={config.direction}
                 >
                     {/* Unified backdrop blur behind navbar */}
@@ -360,7 +363,7 @@ export default function Header() {
                         className="pointer-events-none absolute -inset-px -z-10 rounded-nav border border-nav-border bg-nav-surface shadow-nav backdrop-blur-md"
                     />
                     <div className="relative z-10 flex items-center justify-center border-e border-outline">
-                        <MorphingBrand name={config.blog_name} compact={compact} expanded={brandExpanded} onExpandedChange={onBrandExpansionChange} onNavigate={onNavigate} />
+                        <MorphingBrand name={config.blog_name} compact={compact} expanded={brandExpanded} hovered={brandHovered} onHover={() => setBrandHovered(true)} onExpandedChange={onBrandExpansionChange} onNavigate={onNavigate} />
                     </div>
                     <div className="flex min-w-0 items-start justify-self-center ps-1.5">
                         {links.map(link => {
