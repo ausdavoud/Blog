@@ -136,7 +136,7 @@ export default function BinaryPhoto({
             }}
         >
             <img
-                className="!mb-0 w-full rounded-md object-cover dark:border dark:border-gray-700"
+                className="!mb-0 w-full rounded-md object-cover border border-gray-200 dark:border-gray-700"
                 src={src}
                 alt={alt}
             />
