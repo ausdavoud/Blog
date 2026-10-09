@@ -10,22 +10,6 @@ image: /posts/pink-sky.webp
 <PostCard post="/posts/resurrecting-lms-log-part-1" />
 <PostCard post="/posts/halting-problem" />
 <PostCard post="/posts/first-post" />
-<PostCard post="/posts/first-post" />
-<PostCard post="/posts/first-post" />
-<PostCard post="/posts/first-post" />
-<PostCard post="/posts/first-post" />
-<PostCard post="/posts/first-post" />
-<PostCard post="/posts/first-post" />
-<PostCard post="/posts/first-post" />
-<PostCard post="/posts/first-post" />
-<PostCard post="/posts/first-post" />
-<PostCard post="/posts/first-post" />
-<PostCard post="/posts/first-post" />
-<PostCard post="/posts/first-post" />
-<PostCard post="/posts/first-post" />
-<PostCard post="/posts/first-post" />
-<PostCard post="/posts/first-post" />
-<PostCard post="/posts/first-post" />
-<PostCard post="/posts/first-post" />
+
 
 </div>
