@@ -44,7 +44,7 @@
           'drawer-open': 'minmax(0, 1fr)',
           'drawer-closed': 'minmax(0, 0fr)',
         },
-        transitionProperty: { drawer: 'grid-template-columns' },
+        transitionProperty: { drawer: 'grid-template-columns', brand: 'grid-template-columns, opacity' },
         transitionDuration: { nav: '320ms' },
         transitionTimingFunction: { nav: 'ease' },
         maxWidth: {
