@@ -49,7 +49,7 @@ export default async function Page({ params: routeParams }: { params: Promise<{ 
                 {data.image && <img src={data.image} alt={isSectionPage ? "" : data.title} className="w-full mb-4 rounded-md object-cover" />}
                 {(data.title || data.date) &&
                     <div className={(data.image ? "mb-2" : "my-6")}>
-                        {data.title && <h1 className={`text-h2 sm:text-h1 text-center ${isSectionPage ? "" : "tablet:text-start"} leading-9 mb-1 block font-medium text-on-background-stronger`}>{isSectionPage  ? <span>•</span> : data.title}</h1>}
+                        {data.title && <h1 className={`text-h2 sm:text-h1 text-center ${isSectionPage ? "" : "tablet:text-start"} leading-9 mb-1 block font-medium text-on-background-stronger`}>{isSectionPage  ? <span className="select-none">•</span> : data.title}</h1>}
                         {data.date &&
                             <h2 className="text-sm sm:text-base">
                                 {new Date(data.date || "").toLocaleDateString(getMdLanguage(data), {
