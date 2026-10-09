@@ -5,8 +5,9 @@ const fs = require('node:fs')
 const vm = require('node:vm')
 const ts = require('typescript')
 
-let states = [], cursor = 0, observer, reducedMotion = false, pathname = '/posts', now = 0, nextTimer = 0, scrolls = 0
+let states = [], cursor = 0, observer, reducedMotion = false, viewportWidth = 1024, pathname = '/posts', theme = 'light', now = 0, nextTimer = 0, scrolls = 0
 const timers = new Map()
+const documentListeners = new Map()
 const setTimer = (callback, delay) => {
     const id = ++nextTimer
     timers.set(id, { callback, deadline: now + delay })
@@ -21,7 +22,7 @@ function advance(ms) {
         }
     }
 }
-const element = (type, props) => ({ type, props: props ?? {} })
+const element = (type, props, key) => ({ type, props: props ?? {}, key })
 const react = {
     useState(initial) {
         const index = cursor++
@@ -43,6 +44,7 @@ const react = {
         }
     },
     useId: () => 'tooltip',
+    useCallback: callback => callback,
 }
 const config = { blog_name: 'Davoud Nosrati', direction: 'ltr', header: {
     nav_links: [
@@ -63,12 +65,21 @@ vm.runInNewContext(code, {
     setTimeout: setTimer,
     clearTimeout: id => timers.delete(id),
     window: {
-        matchMedia: () => ({ matches: reducedMotion }),
+        matchMedia: query => ({
+            matches: query.includes('min-width: 460px') ? viewportWidth >= 460 : reducedMotion,
+            addEventListener() {}, removeEventListener() {},
+        }),
         setTimeout: setTimer,
         clearTimeout: id => timers.delete(id),
         scrollTo: () => scrolls++,
     },
-    document: { addEventListener() {}, removeEventListener() {} },
+    document: {
+        addEventListener(type, callback) {
+            if (!documentListeners.has(type)) documentListeners.set(type, new Set())
+            documentListeners.get(type).add(callback)
+        },
+        removeEventListener(type, callback) { documentListeners.get(type)?.delete(callback) },
+    },
     IntersectionObserver: class {
         constructor(callback) { observer = callback }
         disconnect() {}
@@ -77,7 +88,7 @@ vm.runInNewContext(code, {
         if (name === 'react') return react
         if (name === 'react/jsx-runtime') return { jsx: element, jsxs: element }
         if (name === 'next/navigation') return { usePathname: () => pathname }
-        if (name === 'next-themes') return { useTheme: () => ({ theme: 'light', setTheme() {} }) }
+        if (name === 'next-themes') return { useTheme: () => ({ theme, setTheme(value) { theme = value } }) }
         if (name === '@/config') return config
         return () => null
     },
@@ -123,7 +134,11 @@ function clipped(props) {
     assert.equal(props.inert, true, 'Moving items must not receive focus')
 }
 render()
-transition(scroll(true), 'transitionend')
+const drawerCollapse = scroll(true)
+for (const node of findAll(renderHeader(), node => typeof node.props.className === 'string')) {
+    assert.ok(!node.props.className.split(/\s+/).includes('invisible'), 'Collapsing items must remain visible while their width animates')
+}
+transition(drawerCollapse, 'transitionend')
 let drawer = scroll(false)
 clipped(drawer)
 clipped(transition(drawer, 'transitionend', true))
@@ -172,11 +187,67 @@ navigationProps.compact = true
 findAll(renderNavigation(), node => node.type === 'button')[0].props.onClick()
 assert.equal(scrolls, 1)
 
+// On narrow screens the expanded name makes room by drawing in the other items.
+reset()
+viewportWidth = 390
+reducedMotion = false
+pathname = '/poetry'
+renderHeader()
+const headerBrand = () => findAll(renderHeader(), node => node.props.onExpandedChange)[0]
+headerBrand().props.onExpandedChange(true)
+assert.equal(findAll(renderHeader(), node => node.type === 'nav')[0].props['data-compact'], true)
+const narrowItems = findAll(renderHeader(), node => node.props.link)
+assert.equal(narrowItems.find(node => node.props.current).props.link.name, 'Art')
+assert.ok(narrowItems.every(node => node.props.compact))
+headerBrand().props.onExpandedChange(false)
+clipped(render())
+drawer = transition(render(), 'transitionend')
+assert.ok(!drawer.inert)
+assert.equal(findAll(renderHeader(), node => node.type === 'nav')[0].props['data-compact'], false)
+viewportWidth = 1024
+
+// A completed hold lasts while reading, but returning to the top restores scroll compaction.
+for (const width of [390, 768]) {
+    reset()
+    viewportWidth = width
+    renderHeader()
+    scroll(true)
+    headerBrand().props.onExpandedChange(true)
+    scroll(true)
+    assert.equal(headerBrand().props.expanded, true, 'Repeated compact observations must preserve the hold')
+    scroll(false)
+    assert.equal(headerBrand().props.expanded, false, 'Returning to the top must clear the held expansion')
+    scroll(true)
+    assert.equal(headerBrand().props.compact, true)
+    assert.equal(headerBrand().props.expanded, false, 'Subsequent scrolls must compact the name again')
+}
+viewportWidth = 1024
+
+// Route mounts insert the theme rotation at its final angle; toggles still animate it.
+const themeRotation = tree => findAll(tree, node => node.props.className?.includes('duration-300 ease-in-out'))
+for (const route of ['/poetry', '/posts']) {
+    reset()
+    pathname = route
+    const initial = renderHeader()
+    assert.equal(themeRotation(initial).length, 0, 'Hydration must not mount an unrotated theme wrapper')
+    const placeholder = findAll(initial, node => node.props.className === 'inline-block h-4 w-4')[0]
+    const rotation = themeRotation(renderHeader())[0]
+    assert.notEqual(rotation.key, placeholder.key, 'The rotated icon must not reuse the placeholder span')
+    assert.ok(rotation.props.className.includes('-rotate-45'), 'The sun must appear at its final angle')
+}
+findAll(renderHeader(), node => node.props['aria-label'] === 'Toggle color theme')[0].props.onClick()
+assert.ok(themeRotation(renderHeader())[0].props.className.includes('rotate-0'), 'A theme toggle must still update the angle')
+theme = 'light'
+
 // Touch taps and movement never expand the name. A hold expands after 500 ms,
-// suppresses its following click, and cancels on release, scroll, or unmount.
+// suppresses its following click, and stays expanded until an outside click.
 reset()
 let navigations = 0
-const brandProps = { name: 'Davoud Nosrati', compact: true, onNavigate() { navigations++ } }
+const brandProps = {
+    name: 'Davoud Nosrati', compact: true, expanded: false,
+    onExpandedChange(expanded) { brandProps.expanded = expanded },
+    onNavigate() { navigations++ },
+}
 const renderBrand = () => renderComponent(moduleObject.exports.MorphingBrand, brandProps)
 const collapsed = () => findAll(renderBrand(), node => node.props.className?.includes('transition-brand'))
     .every(node => node.props.className.includes('grid-cols-drawer-closed'))
@@ -199,9 +270,21 @@ advance(500)
 assert.ok(!collapsed())
 renderBrand().props.onPointerUp()
 renderBrand().props.onClick(click)
-assert.ok(collapsed())
+assert.ok(!collapsed(), 'Releasing a long press must leave the name expanded')
 assert.equal(prevented, true)
 assert.equal(navigations, 1)
+const inside = {}
+renderBrand().props.ref.current = { contains: target => target === inside }
+for (const callback of documentListeners.get('click')) callback({ target: inside })
+assert.ok(!collapsed(), 'Pressing within the name must not dismiss it')
+renderBrand().props.onPointerLeave()
+assert.ok(!collapsed(), 'Leaving the name must not dismiss a completed long press')
+advance(1000)
+assert.ok(!collapsed(), 'The expanded name must not time out')
+for (const callback of documentListeners.get('pointerdown') ?? []) callback({ target: {} })
+assert.ok(!collapsed(), 'Starting a scroll elsewhere must not dismiss the expanded name')
+for (const callback of documentListeners.get('click')) callback({ target: {} })
+assert.ok(collapsed(), 'Clicking elsewhere must dismiss the expanded name')
 for (const cancel of ['onPointerCancel', 'onPointerLeave', 'onPointerMove']) {
     renderBrand().props.onPointerDown(touch)
     renderBrand().props[cancel]({ ...touch, clientY: 30 })
@@ -209,13 +292,20 @@ for (const cancel of ['onPointerCancel', 'onPointerLeave', 'onPointerMove']) {
     assert.ok(collapsed())
 }
 renderBrand().props.onPointerDown(touch)
+advance(500)
+assert.ok(!collapsed())
+reset()
+assert.equal(documentListeners.get('click').size, 0, 'Unmount must remove outside-click listeners')
+brandProps.expanded = false
+renderBrand().props.onPointerDown(touch)
 reset()
 assert.equal(timers.size, 0)
 renderBrand().props.onPointerEnter({ pointerType: 'mouse' })
-assert.ok(!collapsed(), 'Desktop hover still expands the brand')
+assert.ok(findAll(renderBrand(), node => node.props.className?.includes('transition-brand'))
+    .every(node => node.props.className.includes('nav:grid-cols-drawer-open')), 'Desktop hover still expands the brand above the mobile breakpoint')
 reset()
 
-console.log('Navbar order, uniqueness, drawer transitions, dropdown text, and long-press lifecycle passed.')
+console.log('Navbar order, drawer transitions, dropdowns, long-press scroll reset, and theme rotation passed.')
 
 if (process.argv.includes('--export')) {
     for (const route of ['index', 'posts', 'posts/page-tables', 'posts/hacking-through-x-content-type-options', 'posts/resurrecting-lms-log-part-1']) {

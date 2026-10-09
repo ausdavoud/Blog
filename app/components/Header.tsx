@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useTheme } from 'next-themes'
 import { ChevronDown } from 'lucide-react'
-import { useEffect, useId, useRef, useState, type MouseEventHandler, type ReactNode, type TransitionEvent } from 'react'
+import { useCallback, useEffect, useId, useRef, useState, type MouseEventHandler, type ReactNode, type TransitionEvent } from 'react'
 import config from '@/config'
 import type { NavLink } from '@/app/types'
 import ThemeIcon from './ThemeIcon'
@@ -13,13 +13,15 @@ const navItem = 'nav-item rounded-nav-item font-medium whitespace-nowrap transit
 
 const NAV_TRANSITION_MS = 300
 
-function MorphingBrand({ name, compact, onNavigate }: {
+function MorphingBrand({ name, compact, expanded, onExpandedChange, onNavigate }: {
     name: string
     compact: boolean
+    expanded: boolean
+    onExpandedChange: (expanded: boolean) => void
     onNavigate: MouseEventHandler<HTMLAnchorElement>
 }) {
-    const [longPressed, setLongPressed] = useState(false)
     const [hovered, setHovered] = useState(false)
+    const root = useRef<HTMLAnchorElement>(null)
     const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
     const pressStart = useRef<{ x: number; y: number } | null>(null)
     const suppressClick = useRef(false)
@@ -31,10 +33,18 @@ function MorphingBrand({ name, compact, onNavigate }: {
 
     useEffect(() => clearPressTimer, [])
 
+    useEffect(() => {
+        if (!expanded) return
+        const onClick = (event: MouseEvent) => {
+            if (!root.current?.contains(event.target as Node)) onExpandedChange(false)
+        }
+        document.addEventListener('click', onClick)
+        return () => document.removeEventListener('click', onClick)
+    }, [expanded, onExpandedChange])
+
     const cancelPress = () => {
         clearPressTimer()
         pressStart.current = null
-        setLongPressed(false)
     }
 
     const parts = name.trim().split(/\s+/)
@@ -44,15 +54,16 @@ function MorphingBrand({ name, compact, onNavigate }: {
     const firstTail = first.slice(1)
     const lastInitial = last[0]
     const lastTail = last.slice(1)
-    const collapseClasses = compact && !longPressed && !hovered
-        ? 'grid-cols-drawer-closed opacity-0 group-focus-visible/brand:grid-cols-drawer-open group-focus-visible/brand:opacity-100'
-        : 'grid-cols-drawer-open opacity-100'
+    const collapseClasses = expanded
+        ? 'grid-cols-drawer-open opacity-100'
+        : `grid-cols-drawer-closed opacity-0 nav:group-focus-visible/brand:grid-cols-drawer-open nav:group-focus-visible/brand:opacity-100 ${!compact || hovered ? 'nav:grid-cols-drawer-open nav:opacity-100' : ''}`
 
     return (
         <Link
+            ref={root}
             href="/"
             aria-label={name}
-            className="group/brand compact-site-name touch-pan-y select-none whitespace-nowrap rounded-nav-item px-2.5 py-px text-lg font-semibold leading-6 text-on-background-stronger focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+            className="group/brand compact-site-name touch-pan-y select-none whitespace-nowrap rounded-nav-item px-1.5 py-px text-lg font-semibold leading-6 text-on-background-stronger focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary nav:px-2.5"
             onPointerDown={event => {
                 if (event.pointerType === 'mouse' || !event.isPrimary) return
                 cancelPress()
@@ -61,7 +72,7 @@ function MorphingBrand({ name, compact, onNavigate }: {
                 timerRef.current = setTimeout(() => {
                     timerRef.current = null
                     suppressClick.current = true
-                    setLongPressed(true)
+                    onExpandedChange(true)
                 }, 500)
             }}
             onPointerUp={cancelPress}
@@ -129,7 +140,7 @@ export function ComingSoon({ children, className = '', side = false }: {
                     <svg
                         aria-hidden="true"
                         viewBox="0 0 6 10"
-                        className="absolute right-0 top-1/2 h-2.5 w-1.5 -translate-y-1/2 translate-x-full overflow-visible"
+                        className="absolute -right-[2px] -mr-px top-1/2 h-2.5 w-1.5 -translate-y-1/2 translate-x-full overflow-visible"
                     >
                         <path
                             d="M 0 0 L 6 5 L 0 10 Z"
@@ -142,7 +153,7 @@ export function ComingSoon({ children, className = '', side = false }: {
                     <svg
                         aria-hidden="true"
                         viewBox="0 0 10 6"
-                        className="absolute top-0 left-1/2 h-1.5 w-2.5 -translate-x-1/2 -translate-y-full overflow-visible"
+                        className="absolute -top-[2px] -mt-px left-1/2 h-1.5 w-2.5 -translate-x-1/2 -translate-y-full overflow-visible"
                     >
                         <path
                             d="M 0 6 L 5 0 L 10 6 Z"
@@ -172,7 +183,7 @@ function NavigationItem({ link, pathname, current = false, compact = false, onNa
     const [open, setOpen] = useState(false)
     const root = useRef<HTMLDivElement>(null)
     const pointerType = useRef('')
-    const className = `${navItem} px-2.5 py-px text-sm leading-6 ${current ? 'nav-current bg-nav-current text-on-background-stronger' : 'text-on-background-muted'}`
+    const className = `${navItem} px-1.5 py-px text-sm leading-6 nav:px-2.5 ${current ? 'nav-current bg-nav-current text-on-background-stronger' : 'text-on-background-muted'}`
     const close = () => setOpen(false)
 
     useEffect(() => {
@@ -205,17 +216,22 @@ function NavigationItem({ link, pathname, current = false, compact = false, onNa
                     type="button"
                     aria-label={`${link.name} submenu`}
                     aria-expanded={open && !compact}
-                    className={`${className} flex shrink-0 cursor-pointer items-center gap-1`}
+                    className={`${className} flex shrink-0 cursor-pointer items-center`}
                     onClick={event => {
                         if (compact) { scrollToTop(); return }
                         setOpen(value => event.detail > 0 && pointerType.current === 'mouse' ? true : !value)
                     }}
                 >
                     {link.name}
-                    <ChevronDown
-                        size={16}
-                        className={`relative top-px transition-transform duration-200 motion-reduce:transition-none ${open ? 'rotate-180' : ''} ${compact ? 'hidden' : ''}`}
-                    />
+                    <span
+                        aria-hidden="true"
+                        className={`inline-flex h-5 shrink-0 items-center overflow-hidden transition-[width,opacity] duration-[320ms] ease-[ease] motion-reduce:transition-none ${compact ? 'w-0 opacity-0' : 'w-5 opacity-100'}`}
+                    >
+                        <ChevronDown
+                            size={16}
+                            className={`relative top-px ms-1 shrink-0 transition-transform duration-200 motion-reduce:transition-none ${open ? 'rotate-180' : ''}`}
+                        />
+                    </span>
                 </button>
 
                 {open && !compact && (
@@ -259,6 +275,9 @@ export default function Header() {
     const [mounted, setMounted] = useState(false)
     const header = useRef<HTMLElement>(null)
     const [{ compact, moving }, setDrawer] = useState({ compact: false, moving: false })
+    const [narrow, setNarrow] = useState(false)
+    const [brandExpanded, setBrandExpanded] = useState(false)
+    const navigationCompact = compact || (narrow && brandExpanded)
     const links = config.header.nav_links ?? []
     const matches = (href: string) => pathname === href || (href !== '/' && pathname.startsWith(`${href}/`))
     const current = links.find(link => matches(link.href) || link.children?.some(child => matches(child.href)))
@@ -268,8 +287,25 @@ export default function Header() {
     }, [])
 
     useEffect(() => {
+        const media = window.matchMedia('(min-width: 460px)')
+        const update = () => setNarrow(!media.matches)
+        update()
+        media.addEventListener('change', update)
+        return () => media.removeEventListener('change', update)
+    }, [])
+
+    const onBrandExpansionChange = useCallback((expanded: boolean) => {
+        setBrandExpanded(expanded)
+        if (narrow && !compact) {
+            const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+            setDrawer(previous => ({ ...previous, moving: !reduced }))
+        }
+    }, [narrow, compact])
+
+    useEffect(() => {
         const observer = new IntersectionObserver(([entry]) => {
             const next = !entry.isIntersecting && entry.boundingClientRect.top < 0
+            if (!next) setBrandExpanded(false)
             const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
             setDrawer(previous => previous.compact === next ? previous : { compact: next, moving: !reduced })
         }, { rootMargin: '-16px 0px 0px 0px' })
@@ -310,12 +346,12 @@ export default function Header() {
     }
 
     return (
-        <header ref={header} className="h-nav-stacked w-full shrink-0 nav:h-16">
+        <header ref={header} className="h-16 w-full shrink-0">
             <div className="pointer-events-none fixed inset-x-4 top-4 z-30 flex justify-center">
                 <nav
                     aria-label="Primary"
-                    className="morph-site-header pointer-events-auto relative grid w-max max-w-full grid-cols-1 items-center rounded-nav border border-transparent p-1 nav:grid-cols-nav"
-                    data-compact={compact}
+                    className="morph-site-header pointer-events-auto relative grid w-max max-w-full grid-cols-[max-content_auto] items-center rounded-nav border border-transparent p-1"
+                    data-compact={navigationCompact}
                     dir={config.direction}
                 >
                     {/* Unified backdrop blur behind navbar */}
@@ -323,28 +359,28 @@ export default function Header() {
                         aria-hidden="true"
                         className="pointer-events-none absolute -inset-px -z-10 rounded-nav border border-nav-border bg-nav-surface shadow-nav backdrop-blur-md"
                     />
-                    <div className="relative z-10 flex items-center justify-center nav:border-e nav:border-outline">
-                        <MorphingBrand name={config.blog_name} compact={compact} onNavigate={onNavigate} />
+                    <div className="relative z-10 flex items-center justify-center border-e border-outline">
+                        <MorphingBrand name={config.blog_name} compact={compact} expanded={brandExpanded} onExpandedChange={onBrandExpansionChange} onNavigate={onNavigate} />
                     </div>
                     <div className="flex min-w-0 items-start justify-self-center ps-1.5">
                         {links.map(link => {
                             const isCurrent = link === current
-                            const hidden = compact && !isCurrent
+                            const hidden = navigationCompact && !isCurrent
                             return (
                                 <div
                                     key={link.href}
-                                    className={`grid min-w-0 transition-drawer duration-nav ease-nav motion-reduce:transition-none ${hidden ? 'grid-cols-drawer-closed' : 'grid-cols-drawer-open'} ${!isCurrent && (compact || moving) ? 'overflow-hidden' : 'overflow-visible'}`}
+                                    className={`grid min-w-0 transition-drawer duration-nav ease-nav motion-reduce:transition-none ${hidden ? 'grid-cols-drawer-closed' : 'grid-cols-drawer-open'} ${!isCurrent && (navigationCompact || moving) ? 'overflow-hidden' : 'overflow-visible'}`}
                                     data-moving={!isCurrent && moving}
-                                    inert={!isCurrent && (compact || moving) || undefined}
+                                    inert={!isCurrent && (navigationCompact || moving) || undefined}
                                     onTransitionEnd={onDrawerTransitionEnd}
                                     onTransitionCancel={onDrawerTransitionEnd}
                                 >
-                                    <div className={`min-w-0 ${hidden ? 'invisible' : 'visible'}`}>
+                                    <div className="min-w-0">
                                         <NavigationItem
                                             link={link}
                                             pathname={pathname}
                                             current={isCurrent}
-                                            compact={compact}
+                                            compact={navigationCompact}
                                             onNavigate={onNavigate}
                                         />
                                     </div>
@@ -353,9 +389,9 @@ export default function Header() {
                         })}
                         {config.header.theme_toggle && (
                             <div
-                                className={`grid min-w-0 transition-drawer duration-nav ease-nav motion-reduce:transition-none ${compact ? 'grid-cols-drawer-closed' : 'grid-cols-drawer-open'} ${compact || moving ? 'overflow-hidden' : 'overflow-visible'}`}
+                                className={`grid min-w-0 transition-drawer duration-nav ease-nav motion-reduce:transition-none ${navigationCompact ? 'grid-cols-drawer-closed' : 'grid-cols-drawer-open'} ${navigationCompact || moving ? 'overflow-hidden' : 'overflow-visible'}`}
                                 data-moving={moving}
-                                inert={compact || moving || undefined}
+                                inert={navigationCompact || moving || undefined}
                                 onTransitionEnd={onDrawerTransitionEnd}
                                 onTransitionCancel={onDrawerTransitionEnd}
                             >
@@ -363,25 +399,26 @@ export default function Header() {
                                     <button
                                         type="button"
                                         aria-label="Toggle color theme"
-                                        className={`${navItem} flex shrink-0 items-center justify-center h-6 px-1.5 text-on-background-muted ${compact ? 'invisible' : 'visible'}`}
+                                        className={`${navItem} flex shrink-0 items-center justify-center h-6 px-1.5 text-on-background-muted`}
                                         onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
                                     >
                                         <span
                                             className={`block transition-transform duration-nav ease-nav motion-reduce:transition-none ${
-                                                compact ? '-rotate-180' : 'rotate-0'
+                                                navigationCompact ? '-rotate-180' : 'rotate-0'
                                             }`}
                                         >
-                                            <span
-                                                className={`block transition-transform duration-300 ease-in-out motion-reduce:transition-none ${
-                                                    mounted && theme === 'light' ? '-rotate-45' : 'rotate-0'
-                                                }`}
-                                            >
-                                                {mounted ? (
+                                            {mounted ? (
+                                                <span
+                                                    key="theme-icon"
+                                                    className={`block transition-transform duration-300 ease-in-out motion-reduce:transition-none ${
+                                                        theme === 'light' ? '-rotate-45' : 'rotate-0'
+                                                    }`}
+                                                >
                                                     <ThemeIcon theme={theme} />
-                                                ) : (
-                                                    <span className="inline-block h-4 w-4" aria-hidden="true" />
-                                                )}
-                                            </span>
+                                                </span>
+                                            ) : (
+                                                <span className="inline-block h-4 w-4" aria-hidden="true" />
+                                            )}
                                         </span>
                                     </button>
                                 </div>
