@@ -6,9 +6,7 @@ import { getMdAuthors, getMdDirection, getMdLanguage } from "@/app/actions/mdPro
 import config from "@/config";
 import { PostData } from "../types";
 import path from "path";
-import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
-import { getSidebarData, hasSidebar } from "../actions/sidebar";
 
 export async function generateMetadata({ params: routeParams }: { params: Promise<{ slug?: string | string[] }> }) {
     const params = await routeParams
@@ -43,22 +41,15 @@ export default async function Page({ params: routeParams }: { params: Promise<{ 
     const { data, content, components } = await getPost(params.slug).catch(() => { notFound() })
     const isSectionPage = config.header.nav_links?.some(link =>
         [link, ...(link.children ?? [])].some(item => item.href === "/" + params.slug))
-    const showSidebar = await hasSidebar("/" + params.slug)
-    let sidebarData = null
-    if (showSidebar)
-        sidebarData = await getSidebarData(showSidebar)
 
     return <>
-        {showSidebar &&
-            <Sidebar data={sidebarData} />
-        }
         <div className="flex flex-col items-center max-w-post w-[calc(100%-4rem)]">
-            <Header sidebar={showSidebar !== undefined} />
+            <Header />
             <main className={`${params.slug === "" ? "flex flex-col justify-center py-2" : "pt-2 pb-8"} flex-1 w-full`} style={{ direction: getMdDirection(data) }}>
-                {data.image && <img src={data.image} alt={isSectionPage ? "" : data.title} className="w-full mb-4 rounded-md" />}
+                {data.image && <img src={data.image} alt={isSectionPage ? "" : data.title} className="w-full mb-4 rounded-md object-cover" />}
                 {(data.title || data.date) &&
                     <div className={(data.image ? "mb-2" : "my-6")}>
-                        {data.title && <h1 className={`text-h2 sm:text-h1 text-center ${isSectionPage ? "" : "tablet:text-start"} leading-9 mb-1 block font-medium text-on-background-stronger`}>{isSectionPage ? <span aria-label={data.title}>•</span> : data.title}</h1>}
+                        {data.title && <h1 className={`text-h2 sm:text-h1 text-center ${isSectionPage ? "" : "tablet:text-start"} leading-9 mb-1 block font-medium text-on-background-stronger`}>{isSectionPage  ? <span>•</span> : data.title}</h1>}
                         {data.date &&
                             <h2 className="text-sm sm:text-base">
                                 {new Date(data.date || "").toLocaleDateString(getMdLanguage(data), {
@@ -75,7 +66,6 @@ export default async function Page({ params: routeParams }: { params: Promise<{ 
                 </article>
             </main >
         </div>
-        {showSidebar && <div className="w-[280px] hidden xl:block"></div>}
     </>
 }
 

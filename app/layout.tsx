@@ -29,9 +29,9 @@ export default function RootLayout({
     ? fonts.map(f => f.style.fontFamily.split(",")[0]).join(", ")
     : fonts.style.fontFamily
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" className="overflow-y-scroll" suppressHydrationWarning>
       <GoogleAnalytics />
-      <body className={'flex min-h-svh flex-col items-center bg-background text-on-background'}
+      <body className="flex h-full min-h-svh w-full flex-col items-center bg-background text-on-background"
         style={{ fontFamily }}>
         <Providers>
           <div className="flex flex-1 w-full justify-center gap-8">

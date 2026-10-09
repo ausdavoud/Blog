@@ -49,11 +49,4 @@ export type Config = {
     content_entry: string,
     lang: string,
     site_url: string,
-    global_sidebar: boolean
-}
-
-export type SidebarData = {
-    name: string,
-    url: string,
-    children?: SidebarData[]
 }

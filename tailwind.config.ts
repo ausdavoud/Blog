@@ -10,10 +10,16 @@ const config: Config = {
   theme: {
     extend: {
       screens: {
+        nav: '460px',
         md: '724px',
         tablet: '724px',
       },
       colors: {
+        'nav-surface': 'color-mix(in srgb, var(--background) 88%, transparent)',
+        'nav-border': 'color-mix(in srgb, var(--outline) 55%, transparent)',
+        'nav-current': 'color-mix(in srgb, var(--on-background-muted) 12%, transparent)',
+        'nav-panel': 'color-mix(in srgb, var(--background) 70%, transparent)',
+        'nav-panel-border': 'color-mix(in srgb, var(--outline) 70%, transparent)',
         'background': 'var(--background)',
         'on-background': 'var(--on-background)',
         'on-background-stronger': 'var(--on-background-stronger)',
@@ -30,6 +36,18 @@ const config: Config = {
         'link': 'var(--link)',
         'link-hover': 'var(--link-hover)',
       },
+      // Measurements and motion from the deployed navbar, exposed as Tailwind utilities.
+      borderRadius: { nav: '11px', 'nav-item': '7px' },
+      boxShadow: { nav: '0 2px 8px rgb(0 0 0 / 4%)' },
+      backdropBlur: { nav: '20px' },
+      gridTemplateColumns: {
+        nav: 'max-content auto',
+        'drawer-open': 'minmax(0, 1fr)',
+        'drawer-closed': 'minmax(0, 0fr)',
+      },
+      transitionProperty: { drawer: 'grid-template-columns' },
+      transitionDuration: { nav: '320ms' },
+      transitionTimingFunction: { nav: 'ease' },
       maxWidth: {
         "post": 'var(--max-post-width)',
       },
@@ -38,10 +56,12 @@ const config: Config = {
         "logo-sm": "var(--logo-size-sm)",
       },
       height: {
+        'nav-stacked': '94px',
         "logo": "var(--logo-size)",
         "logo-sm": "var(--logo-size-sm)",
       },
       fontSize: {
+        'nav-tooltip': '9px',
         "body": "var(--font-body)",
         "label": "var(--font-label)",
         "label-sm": "var(--font-label-small)",

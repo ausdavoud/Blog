@@ -26,7 +26,6 @@ const config = {
     lang: 'en',
     direction: 'ltr',
     content_entry: "./public",
-    global_sidebar: false,
     // These are default values for metadata base. If you have your domain,
     // you can either set it in environment variables or set it here.
     // These will be used for open graph images (sharing preview).

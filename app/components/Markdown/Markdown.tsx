@@ -9,6 +9,7 @@ import PostCard from "../PostCard";
 import { ComingSoon } from "../Header";
 import BinaryPhoto from "../BinaryPhoto";
 import MarkdownLink from "./MarkdownLink";
+import type { ComponentPropsWithoutRef } from "react";
 
 type MarkdownNode = {
   type: string;
@@ -58,7 +59,11 @@ export default function Markdown({
   return (
     <MDXRemote
       source={source}
-      components={{ a: MarkdownLink, ...components, PostCard, ComingSoon, BinaryPhoto }}
+      components={{
+        a: MarkdownLink,
+        img: ({ className = "", ...props }: ComponentPropsWithoutRef<'img'>) => <img {...props} className={`object-cover ${className}`} />,
+        ...components, PostCard, ComingSoon, BinaryPhoto,
+      }}
       options={{
         mdxOptions: {
           useDynamicImport: true,
