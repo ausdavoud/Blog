@@ -9,7 +9,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 }
 
 function CompileErrorComponent() {
-    return <main className="flex min-h-screen flex-col m-auto py-6 gap-6 w-[calc(100%-4rem)] max-w-[var(--max-post-width)]">
+    return <main className="flex min-h-screen flex-col my-auto py-6 gap-6 mx-8 min-w-0 flex-1 max-w-screen-sm">
         <h1 className="text-4xl">Compile Error !</h1>
         <h2 className="text-xl">There was an issue while compiling this page.</h2>
         <p>If you are a visitor then you can wait for the owner to fix this issue.

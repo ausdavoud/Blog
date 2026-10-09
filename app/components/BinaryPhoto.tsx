@@ -5,25 +5,25 @@ import { useEffect, useRef, useState } from 'react'
 const rails = [
     {
         edge: 'top',
-        position: 'left-[10px] top-0',
+        position: 'left-2.5 top-0',
         digits: '',
         horizontal: true,
     },
     {
         edge: 'left',
-        position: 'left-0 top-[10px]',
+        position: 'left-0 top-2.5',
         digits: 'flex-col',
         horizontal: false,
     },
     {
         edge: 'bottom',
-        position: 'bottom-0 right-[10px]',
+        position: 'bottom-0 right-2.5',
         digits: 'absolute right-0 flex-row-reverse',
         horizontal: true,
     },
     {
         edge: 'right',
-        position: 'bottom-[10px] right-0',
+        position: 'bottom-2.5 right-0',
         digits: 'absolute bottom-0 flex-col-reverse',
         horizontal: false,
     },
@@ -72,10 +72,7 @@ export default function BinaryPhoto({
     }, [hovered])
 
     useEffect(() => {
-        if (
-            !hovered ||
-            window.matchMedia('(prefers-reduced-motion: reduce)').matches
-        ) return
+        if (!hovered) return
 
         const randomize = () => {
             setBits(
@@ -94,10 +91,7 @@ export default function BinaryPhoto({
     }, [hovered, size])
 
     useEffect(() => {
-        if (
-            !hovered ||
-            window.matchMedia('(prefers-reduced-motion: reduce)').matches
-        ) return
+        if (!hovered) return
 
         const animations = Array.from(
             frame.current?.querySelectorAll('[data-binary-digits]') ?? [],
@@ -122,7 +116,7 @@ export default function BinaryPhoto({
     return (
         <div
             ref={frame}
-            className="relative mb-[4px] p-[10px]"
+            className="relative mb-1 p-2.5"
             onPointerEnter={event => {
                 if (event.pointerType === 'mouse') setHovered(true)
             }}
@@ -143,13 +137,13 @@ export default function BinaryPhoto({
 
             <div
                 aria-hidden="true"
-                className="pointer-events-none absolute inset-0 text-[10px] leading-[10px] text-[var(--on-background-muted)] [font-family:ui-monospace,SFMono-Regular,Consolas,monospace]"
+                className="pointer-events-none absolute inset-0 text-[10px] leading-[10px] text-neutral-500 dark:text-zinc-400 font-mono"
             >
-                <span className="absolute left-0 top-0 z-[1] h-[10px] w-[10px] bg-[var(--background)] text-center">
+                <span className="absolute left-0 top-0 z-10 h-2.5 w-2.5 bg-zinc-50 dark:bg-neutral-900 text-center">
                     0
                 </span>
 
-                <span className="absolute bottom-0 right-0 z-[1] h-[10px] w-[10px] bg-[var(--background)] text-center">
+                <span className="absolute bottom-0 right-0 z-10 h-2.5 w-2.5 bg-zinc-50 dark:bg-neutral-900 text-center">
                     0
                 </span>
 
@@ -159,17 +153,16 @@ export default function BinaryPhoto({
                         className={`
                             absolute overflow-hidden whitespace-nowrap
                             bg-no-repeat
-                            [background-image:linear-gradient(currentColor,currentColor)]
-                            transition-[width,height] duration-[800ms]
-                            [transition-timing-function:ease]
-                            motion-reduce:transition-none
+                            bg-gradient-to-r from-current to-current
+                            transition-[width,height] duration-700
+                            ease-in-out
                             ${position}
                             ${horizontal
-                                ? `h-[10px] bg-[position:left_center] bg-[length:100%_1px] ${
-                                    hovered ? 'w-[calc(100%-15px)]' : 'w-[18px]'
+                                ? `h-2.5 bg-left bg-[length:100%_1px] ${
+                                    hovered ? 'w-[calc(100%-15px)]' : 'w-5'
                                 }`
-                                : `w-[10px] bg-[position:center_top] bg-[length:1px_100%] ${
-                                    hovered ? 'h-[calc(100%-15px)]' : 'h-[18px]'
+                                : `w-2.5 bg-top bg-[length:1px_100%] ${
+                                    hovered ? 'h-[calc(100%-15px)]' : 'h-5'
                                 }`
                             }
                         `}
@@ -178,10 +171,10 @@ export default function BinaryPhoto({
                             data-binary-digits
                             className={`
                                 flex justify-between
-                                [&>span]:h-[10px]
-                                [&>span]:w-[10px]
-                                [&>span]:flex-[0_0_10px]
-                                [&>span]:bg-[var(--background)]
+                                [&>span]:h-2.5
+                                [&>span]:w-2.5
+                                [&>span]:grow-0 [&>span]:shrink-0 [&>span]:basis-2.5
+                                [&>span]:bg-zinc-50 dark:[&>span]:bg-neutral-900
                                 [&>span]:text-center
                                 ${digits}
                             `}
