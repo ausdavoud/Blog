@@ -265,8 +265,8 @@ const brandProps = {
     onNavigate() { navigations++ },
 }
 const renderBrand = () => renderComponent(moduleObject.exports.MorphingBrand, brandProps)
-const collapsed = () => findAll(renderBrand(), node => node.props.className?.includes('transition-brand'))
-    .every(node => node.props.className.includes('grid-cols-drawer-closed'))
+const collapsed = () => findAll(renderBrand(), node => node.props.className?.includes('transition-[grid-template-columns,opacity]'))
+    .every(node => node.props.className.includes('grid-cols-[minmax(0,0fr)]'))
 const touch = { pointerType: 'touch', isPrimary: true, clientX: 10, clientY: 10 }
 let prevented = false
 const click = { preventDefault() { prevented = true } }
@@ -318,8 +318,8 @@ reset()
 assert.equal(timers.size, 0)
 renderBrand().props.onPointerEnter({ pointerType: 'mouse' })
 renderBrand().props.onPointerLeave()
-assert.ok(findAll(renderBrand(), node => node.props.className?.includes('transition-brand'))
-    .every(node => node.props.className.includes('nav:grid-cols-drawer-open')), 'Leaving DN for another navbar item must preserve the expansion')
+assert.ok(findAll(renderBrand(), node => node.props.className?.includes('transition-[grid-template-columns,opacity]'))
+    .every(node => node.props.className.includes('min-[460px]:grid-cols-[minmax(0,1fr)]')), 'Leaving DN for another navbar item must preserve the expansion')
 reset()
 
 console.log('Navbar order, drawer transitions, dropdowns, long-press scroll reset, and theme rotation passed.')

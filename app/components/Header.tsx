@@ -9,7 +9,7 @@ import config from '@/config'
 import type { NavLink } from '@/app/types'
 import ThemeIcon from './ThemeIcon'
 
-const navItem = 'nav-item rounded-nav-item font-medium whitespace-nowrap transition-colors hover:text-primary focus-visible:text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary'
+const navItem = 'nav-item rounded-[7px] font-medium whitespace-nowrap transition-colors hover:text-[color:var(--primary)] focus-visible:text-[color:var(--primary)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--primary)]'
 
 const NAV_TRANSITION_MS = 300
 
@@ -56,15 +56,15 @@ function MorphingBrand({ name, compact, expanded, hovered, onHover, onExpandedCh
     const lastInitial = last[0]
     const lastTail = last.slice(1)
     const collapseClasses = expanded
-        ? 'grid-cols-drawer-open opacity-100'
-        : `grid-cols-drawer-closed opacity-0 nav:group-focus-visible/brand:grid-cols-drawer-open nav:group-focus-visible/brand:opacity-100 ${!compact || hovered ? 'nav:grid-cols-drawer-open nav:opacity-100' : ''}`
+        ? 'grid-cols-[minmax(0,1fr)] opacity-100'
+        : `grid-cols-[minmax(0,0fr)] opacity-0 min-[460px]:group-focus-visible/brand:grid-cols-[minmax(0,1fr)] min-[460px]:group-focus-visible/brand:opacity-100 ${!compact || hovered ? 'min-[460px]:grid-cols-[minmax(0,1fr)] min-[460px]:opacity-100' : ''}`
 
     return (
         <Link
             ref={root}
             href="/"
             aria-label={name}
-            className="group/brand compact-site-name touch-pan-y select-none whitespace-nowrap rounded-nav-item px-1.5 py-px text-lg font-semibold leading-6 text-on-background-stronger focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary nav:px-2.5"
+            className="group/brand compact-site-name touch-pan-y select-none whitespace-nowrap rounded-[7px] px-1.5 py-px text-lg font-semibold leading-6 text-[color:var(--on-background-stronger)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--primary)] min-[460px]:px-2.5"
             onPointerDown={event => {
                 if (event.pointerType === 'mouse' || !event.isPrimary) return
                 cancelPress()
@@ -97,11 +97,11 @@ function MorphingBrand({ name, compact, expanded, hovered, onHover, onExpandedCh
             {parts.length < 2 ? name : (
                 <span aria-hidden="true" className="inline-flex items-baseline overflow-hidden">
                     <span>{firstInitial}</span>
-                    <span className={`grid transition-brand duration-nav ease-nav motion-reduce:transition-none ${collapseClasses}`}>
+                    <span className={`grid transition-[grid-template-columns,opacity] duration-[320ms] ease-[ease] motion-reduce:transition-none ${collapseClasses}`}>
                         <span className="overflow-hidden whitespace-nowrap">{firstTail}&nbsp;</span>
                     </span>
                     <span>{lastInitial}</span>
-                    <span className={`grid transition-brand duration-nav ease-nav motion-reduce:transition-none ${collapseClasses}`}>
+                    <span className={`grid transition-[grid-template-columns,opacity] duration-[320ms] ease-[ease] motion-reduce:transition-none ${collapseClasses}`}>
                         <span className="overflow-hidden whitespace-nowrap">{lastTail}</span>
                     </span>
                 </span>
@@ -124,13 +124,13 @@ export function ComingSoon({ children, className = '', side = false }: {
             aria-labelledby={`${id}-label`}
             aria-describedby={`${id}-tooltip`}
             tabIndex={0}
-            className={`coming-soon group/soon relative inline-block cursor-default rounded-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary ${className}`}
+            className={`coming-soon group/soon relative inline-block cursor-default rounded-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--primary)] ${className}`}
         >
             <span id={`${id}-label`}>{children}</span>
             <span
                 id={`${id}-tooltip`}
                 role="tooltip"
-                className={`pointer-events-none invisible absolute z-50 w-max rounded border border-outline bg-background px-2 py-1 text-nav-tooltip font-normal leading-none whitespace-nowrap text-on-background shadow-lg group-hover/soon:visible group-focus-visible/soon:visible ${
+                className={`pointer-events-none invisible absolute z-50 w-max rounded border border-[var(--outline)] bg-[var(--background)] px-2 py-1 text-[9px] font-normal leading-none whitespace-nowrap text-[color:var(--on-background)] shadow-lg group-hover/soon:visible group-focus-visible/soon:visible ${
                     side
                         ? 'right-full top-1/2 mr-4 -translate-y-1/2'
                         : 'left-1/2 top-full mt-3.5 -translate-x-1/2'
@@ -145,7 +145,7 @@ export function ComingSoon({ children, className = '', side = false }: {
                     >
                         <path
                             d="M 0 0 L 6 5 L 0 10 Z"
-                            className="fill-background stroke-outline"
+                            className="fill-[var(--background)] stroke-[var(--outline)]"
                             strokeWidth="1"
                             strokeLinejoin="round"
                         />
@@ -158,7 +158,7 @@ export function ComingSoon({ children, className = '', side = false }: {
                     >
                         <path
                             d="M 0 6 L 5 0 L 10 6 Z"
-                            className="fill-background stroke-outline"
+                            className="fill-[var(--background)] stroke-[var(--outline)]"
                             strokeWidth="1"
                             strokeLinejoin="round"
                         />
@@ -184,7 +184,7 @@ function NavigationItem({ link, pathname, current = false, compact = false, onNa
     const [open, setOpen] = useState(false)
     const root = useRef<HTMLDivElement>(null)
     const pointerType = useRef('')
-    const className = `${navItem} px-1.5 py-px text-sm leading-6 nav:px-2.5 ${current ? 'nav-current bg-nav-current text-on-background-stronger' : 'text-on-background-muted'}`
+    const className = `${navItem} px-1.5 py-px text-sm leading-6 min-[460px]:px-2.5 ${current ? 'nav-current bg-[color-mix(in_srgb,var(--on-background-muted)_12%,transparent)] text-[color:var(--on-background-stronger)]' : 'text-[color:var(--on-background-muted)]'}`
     const close = () => setOpen(false)
 
     useEffect(() => {
@@ -237,13 +237,13 @@ function NavigationItem({ link, pathname, current = false, compact = false, onNa
 
                 {open && !compact && (
                     <div className="nav-dropdown-panel absolute end-0 top-full z-20 w-max pt-2">
-                        <div className="flex flex-col rounded border border-nav-panel-border bg-nav-panel shadow-lg backdrop-blur-xl">
+                        <div className="flex flex-col rounded border border-[color-mix(in_srgb,var(--outline)_70%,transparent)] bg-[color-mix(in_srgb,var(--background)_var(--nav-panel-opacity),transparent)] shadow-lg backdrop-blur-xl">
                             {link.children.map(child => child.disabled
-                                ? <ComingSoon key={child.href} side className={`${navItem} w-full px-3 py-2 text-sm leading-6 text-on-background-muted`}>{child.name}</ComingSoon>
+                                ? <ComingSoon key={child.href} side className={`${navItem} w-full px-3 py-2 text-sm leading-6 text-[color:var(--on-background-muted)]`}>{child.name}</ComingSoon>
                                 : <Link
                                     key={child.href}
                                     href={child.href}
-                                    className={`${navItem} block px-3 py-2 text-sm leading-6 text-on-background-muted`}
+                                    className={`${navItem} block px-3 py-2 text-sm leading-6 text-[color:var(--on-background-muted)]`}
                                     aria-current={pathname === child.href ? 'page' : undefined}
                                     onClick={event => { close(); onNavigate(event) }}
                                 >
@@ -352,7 +352,7 @@ export default function Header() {
             <div className="pointer-events-none fixed inset-x-4 top-4 z-30 flex justify-center">
                 <nav
                     aria-label="Primary"
-                    className="morph-site-header pointer-events-auto relative grid w-max max-w-full grid-cols-[max-content_auto] items-center rounded-nav border border-transparent p-1"
+                    className="morph-site-header pointer-events-auto relative grid w-max max-w-full grid-cols-[max-content_auto] items-center rounded-[11px] border border-transparent p-1"
                     data-compact={navigationCompact}
                     onPointerLeave={event => { if (event.pointerType === 'mouse') setBrandHovered(false) }}
                     dir={config.direction}
@@ -360,9 +360,9 @@ export default function Header() {
                     {/* Unified backdrop blur behind navbar */}
                     <span
                         aria-hidden="true"
-                        className="pointer-events-none absolute -inset-px -z-10 rounded-nav border border-nav-border bg-nav-surface shadow-nav backdrop-blur-md"
+                        className="pointer-events-none absolute -inset-px -z-10 rounded-[11px] border border-[color-mix(in_srgb,var(--outline)_55%,transparent)] bg-[color-mix(in_srgb,var(--background)_var(--nav-surface-opacity),transparent)] shadow-[0_2px_8px_rgb(0_0_0_/_4%)] backdrop-blur-md"
                     />
-                    <div className="relative z-10 flex items-center justify-center border-e border-outline">
+                    <div className="relative z-10 flex items-center justify-center border-e border-[var(--outline)]">
                         <MorphingBrand name={config.blog_name} compact={compact} expanded={brandExpanded} hovered={brandHovered} onHover={() => setBrandHovered(true)} onExpandedChange={onBrandExpansionChange} onNavigate={onNavigate} />
                     </div>
                     <div className="flex min-w-0 items-start justify-self-center ps-1.5">
@@ -372,7 +372,7 @@ export default function Header() {
                             return (
                                 <div
                                     key={link.href}
-                                    className={`grid min-w-0 transition-drawer duration-nav ease-nav motion-reduce:transition-none ${hidden ? 'grid-cols-drawer-closed' : 'grid-cols-drawer-open'} ${!isCurrent && (navigationCompact || moving) ? 'overflow-hidden' : 'overflow-visible'}`}
+                                    className={`grid min-w-0 transition-[grid-template-columns] duration-[320ms] ease-[ease] motion-reduce:transition-none ${hidden ? 'grid-cols-[minmax(0,0fr)]' : 'grid-cols-[minmax(0,1fr)]'} ${!isCurrent && (navigationCompact || moving) ? 'overflow-hidden' : 'overflow-visible'}`}
                                     data-moving={!isCurrent && moving}
                                     inert={!isCurrent && (navigationCompact || moving) || undefined}
                                     onTransitionEnd={onDrawerTransitionEnd}
@@ -392,7 +392,7 @@ export default function Header() {
                         })}
                         {config.header.theme_toggle && (
                             <div
-                                className={`grid min-w-0 transition-drawer duration-nav ease-nav motion-reduce:transition-none ${navigationCompact ? 'grid-cols-drawer-closed' : 'grid-cols-drawer-open'} ${navigationCompact || moving ? 'overflow-hidden' : 'overflow-visible'}`}
+                                className={`grid min-w-0 transition-[grid-template-columns] duration-[320ms] ease-[ease] motion-reduce:transition-none ${navigationCompact ? 'grid-cols-[minmax(0,0fr)]' : 'grid-cols-[minmax(0,1fr)]'} ${navigationCompact || moving ? 'overflow-hidden' : 'overflow-visible'}`}
                                 data-moving={moving}
                                 inert={navigationCompact || moving || undefined}
                                 onTransitionEnd={onDrawerTransitionEnd}
@@ -402,11 +402,11 @@ export default function Header() {
                                     <button
                                         type="button"
                                         aria-label="Toggle color theme"
-                                        className={`${navItem} flex shrink-0 items-center justify-center h-6 px-1.5 text-on-background-muted`}
+                                        className={`${navItem} flex shrink-0 items-center justify-center h-6 px-1.5 text-[color:var(--on-background-muted)]`}
                                         onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
                                     >
                                         <span
-                                            className={`block transition-transform duration-nav ease-nav motion-reduce:transition-none ${
+                                            className={`block transition-transform duration-[320ms] ease-[ease] motion-reduce:transition-none ${
                                                 navigationCompact ? '-rotate-180' : 'rotate-0'
                                             }`}
                                         >

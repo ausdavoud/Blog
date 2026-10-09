@@ -31,14 +31,14 @@ export default function RootLayout({
   return (
     <html lang="en" className="overflow-y-scroll" suppressHydrationWarning>
       <GoogleAnalytics />
-      <body className="flex h-full min-h-svh w-full flex-col items-center bg-background text-on-background"
+      <body className="flex h-full min-h-svh w-full flex-col items-center bg-[var(--background)] text-[color:var(--on-background)]"
         style={{ fontFamily }}>
         <Providers>
           <div className="flex flex-1 w-full justify-center gap-8">
             {children}
           </div>
-          <footer className="w-[calc(100%-4rem)] max-w-post py-2 text-center text-sm text-on-background-muted">
-            2026 · Made on top of <a target="_blank" rel="noopener noreferrer" href="https://github.com/mohammad-mallaee/blogger" className="underline hover:text-on-background">blogger</a>
+          <footer className="w-[calc(100%-4rem)] max-w-[var(--max-post-width)] py-2 text-center text-sm text-[color:var(--on-background-muted)]">
+            2026 · Made on top of <a target="_blank" rel="noopener noreferrer" href="https://github.com/mohammad-mallaee/blogger" className="underline hover:text-[color:var(--on-background)]">blogger</a>
           </footer>
         </Providers>
       </body>

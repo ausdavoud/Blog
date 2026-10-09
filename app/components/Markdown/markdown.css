@@ -30,22 +30,8 @@ code[data-line-numbers-max-digits="3"] > [data-line]::before {
   padding-right: 1em;
 }
 
-.markdown :not(pre) > code {
-  overflow-wrap: anywhere;
-  padding: 0.15em 0.4em 0.1em;
-  @apply text-[0.9375rem] bg-inlineCode-bg text-inlineCode-text mx-[2px] whitespace-normal rounded;
-}
-
-.markdown {
-  @apply text-body leading-[1.625rem];
-}
-
 .markdown * {
   unicode-bidi: plaintext;
-}
-
-.markdown p {
-  @apply py-[0.4rem];
 }
 
 .markdown .katex {
@@ -63,10 +49,6 @@ code[data-line-numbers-max-digits="3"] > [data-line]::before {
 
 .markdown .katex-display > .katex {
   font-size: 1.21em;
-}
-
-.markdown a:not(.post-row) {
-  @apply text-link font-medium hover:text-link-hover hover:underline transition-colors;
 }
 
 .markdown a.no-underline,
@@ -105,38 +87,6 @@ code[data-line-numbers-max-digits="3"] > [data-line]::before {
   }
 }
 
-.markdown hr {
-  @apply pt-8 opacity-60 dark:opacity-10;
-}
-
-.markdown strong {
-  @apply font-semibold;
-}
-
-.markdown h1 {
-  @apply mt-8 mb-1 text-h1 font-medium text-on-background-stronger;
-}
-
-.markdown h2 {
-  @apply mt-8 mb-1 text-h2 font-medium text-on-background-stronger;
-}
-
-.markdown h3 {
-  @apply mt-8 mb-1 text-h3 font-medium text-on-background-stronger;
-}
-
-.markdown h4 {
-  @apply mt-8 mb-1 text-h4 font-normal;
-}
-
-.markdown pre {
-  @apply my-2 max-w-full overflow-x-auto pl-4 text-sm border border-outline leading-6 rounded-md py-3 bg-code-bg;
-}
-
-.markdown pre code {
-  @apply text-on-code
-}
-
 .markdown pre code span {
   color: var(--shiki-light);
 }
@@ -145,48 +95,6 @@ html.dark .markdown pre code span {
   color: var(--shiki-dark);
 }
 
-.markdown blockquote {
-  @apply relative my-2 pl-3 opacity-80 border-l-white border-l-2 italic;
-}
-
-.markdown blockquote p {
-  @apply p-0 m-0;
-}
-
-.markdown table {
-  @apply mx-auto my-4 w-auto max-w-full border-collapse;
-}
-
-.markdown th,
-.markdown td {
-  @apply border border-outline px-3 py-2 text-left;
-}
-
-.markdown th {
-  @apply bg-surface font-semibold text-on-background-stronger;
-}
-
 .markdown p img {
   margin-bottom: 0;
-}
-
-.markdown ul,
-.markdown ol {
-  @apply mx-4 my-2;
-}
-
-.markdown ul {
-  @apply list-disc;
-}
-
-.markdown ol {
-  @apply list-decimal;
-}
-
-.markdown li {
-  @apply font-light mb-[0.1rem];
-}
-
-.markdown img {
-  @apply max-w-full mb-2;
 }
