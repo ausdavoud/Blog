@@ -1,3 +1,16 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+:root {
+  /* Light mode percentages */
+  --nav-surface-opacity: 45%;
+  --nav-panel-opacity: 40%;
+}
+
+.dark {
+  /* Dark mode percentages */
+  --nav-surface-opacity: 75%;
+  --nav-panel-opacity: 75%;
+}
