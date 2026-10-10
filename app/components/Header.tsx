@@ -347,7 +347,7 @@ export default function Header() {
                     <div className={`relative z-10 flex items-center justify-center transition-[border-inline-end-width] duration-300 ease-in-out ${compact && !current ? 'border-e-0 border-transparent' : 'border-e border-zinc-300 dark:border-zinc-800'}`}>
                         <MorphingBrand name={config.blog_name} compact={compact} expanded={brandExpanded} hovered={brandHovered} onHover={() => onBrandHoverChange(true)} onExpandedChange={onBrandExpansionChange} onNavigate={onNavigate} />
                     </div>
-                    <div className={`flex min-w-0 items-start justify-self-center transition-[padding-inline-start] duration-300 ease-in-out ${compact && !current ? 'ps-0' : 'ps-1.5'}`}>
+                    <div className={`flex min-w-0 items-center justify-self-center transition-[padding-inline-start] duration-300 ease-in-out ${compact && !current ? 'ps-0' : 'ps-1.5'}`}>
                         {links.map(link => {
                             const isCurrent = link === current
                             const hidden = compact && !isCurrent
