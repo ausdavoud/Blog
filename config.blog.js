@@ -13,7 +13,7 @@ const config = {
                 name: 'Art',
                 href: '/art',
                 children: [
-                    { name: 'Poetry', href: '/poetry', disabled: false },
+                    { name: 'Poetry', href: '/poetry', disabled: true },
                     { name: 'Motion', href: '/motion', disabled: true },
                 ],
             },

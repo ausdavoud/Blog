@@ -9,7 +9,7 @@ import config from '@/config'
 import type { NavLink } from '@/app/types'
 import ThemeIcon from './ThemeIcon'
 
-const navItem = 'rounded-lg font-medium whitespace-nowrap transition-colors hover:text-sky-700 dark:hover:text-sky-300 focus-visible:text-sky-700 dark:focus-visible:text-sky-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-700 dark:focus-visible:outline-sky-300'
+const navItem = 'rounded-lg font-medium whitespace-nowrap transition-colors [@media(hover:hover)]:hover:text-sky-700 dark:[@media(hover:hover)]:hover:text-sky-300 focus-visible:text-sky-700 dark:focus-visible:text-sky-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-700 dark:focus-visible:outline-sky-300'
 
 const NAV_TRANSITION_MS = 300
 
@@ -23,16 +23,7 @@ function MorphingBrand({ name, compact, expanded, hovered, onHover, onExpandedCh
     onNavigate: MouseEventHandler<HTMLAnchorElement>
 }) {
     const root = useRef<HTMLAnchorElement>(null)
-    const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-    const pressStart = useRef<{ x: number; y: number } | null>(null)
     const suppressClick = useRef(false)
-
-    const clearPressTimer = () => {
-        if (timerRef.current !== null) clearTimeout(timerRef.current)
-        timerRef.current = null
-    }
-
-    useEffect(() => clearPressTimer, [compact])
 
     useEffect(() => {
         if (!expanded) return
@@ -42,11 +33,6 @@ function MorphingBrand({ name, compact, expanded, hovered, onHover, onExpandedCh
         document.addEventListener('click', onClick)
         return () => document.removeEventListener('click', onClick)
     }, [expanded, onExpandedChange])
-
-    const cancelPress = () => {
-        clearPressTimer()
-        pressStart.current = null
-    }
 
     const parts = name.trim().split(/\s+/)
     const [first, ...rest] = parts
@@ -67,25 +53,15 @@ function MorphingBrand({ name, compact, expanded, hovered, onHover, onExpandedCh
             aria-label={name}
             className="group/brand touch-pan-y select-none whitespace-nowrap rounded-lg px-1.5 py-px text-lg font-semibold leading-6 text-stone-950 dark:text-stone-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-700 dark:focus-visible:outline-sky-300 min-[460px]:px-2.5"
             onPointerDown={event => {
-                if (!compact || event.pointerType === 'mouse' || !event.isPrimary) return
-                cancelPress()
+                if (!event.isPrimary) return
                 suppressClick.current = false
-                pressStart.current = { x: event.clientX, y: event.clientY }
-                timerRef.current = setTimeout(() => {
-                    timerRef.current = null
+                if (compact && !expanded && event.pointerType !== 'mouse') {
                     suppressClick.current = true
                     onExpandedChange(true)
-                }, 500)
-            }}
-            onPointerUp={cancelPress}
-            onPointerCancel={cancelPress}
-            onPointerMove={event => {
-                const start = pressStart.current
-                if (start && Math.hypot(event.clientX - start.x, event.clientY - start.y) > 10) cancelPress()
+                }
             }}
             onPointerEnter={event => { if (compact && event.pointerType === 'mouse') onHover() }}
-            onPointerLeave={cancelPress}
-            onContextMenu={event => { if (pressStart.current || suppressClick.current) event.preventDefault() }}
+            onContextMenu={event => { if (suppressClick.current) event.preventDefault() }}
             onClick={event => {
                 if (suppressClick.current) {
                     event.preventDefault()
@@ -131,7 +107,7 @@ export function ComingSoon({ children, className = '', side = false }: {
             <span
                 id={`${id}-tooltip`}
                 role="tooltip"
-                className={`pointer-events-none invisible absolute z-50 w-max rounded border border-zinc-300 dark:border-zinc-700 backdrop-blur-sm ${!side ? 'bg-zinc-50/50' : 'bg-zinc-50'} dark:bg-neutral-900 ${side ? 'backdrop-blur-sm' : ''} px-2 pt-1 pb-1.5 text-xs font-normal leading-none whitespace-nowrap text-neutral-500 dark:text-neutral-200 shadow-lg group-hover/soon:visible group-focus-visible/soon:visible ${
+                className={`pointer-events-none invisible absolute z-50 w-max rounded border border-zinc-300 dark:border-zinc-700 backdrop-blur-sm ${!side ? 'bg-zinc-50/50' : 'bg-zinc-50'} dark:bg-neutral-900 ${side ? 'backdrop-blur-sm' : ''} px-2 pt-1 pb-1.5 text-xs font-normal leading-none whitespace-nowrap text-neutral-500 dark:text-neutral-200 shadow-lg [@media(hover:hover)]:group-hover/soon:visible group-focus/soon:visible ${
                     side
                         ? 'right-full top-1/2 mr-4 -translate-y-1/2'
                         : 'left-1/2 top-full mt-3.5 -translate-x-1/2'
@@ -359,7 +335,7 @@ export default function Header() {
                 <nav
                     ref={navbar}
                     aria-label="Primary"
-                    className="pointer-events-auto relative grid w-max max-w-full grid-cols-[max-content_auto] items-center rounded-xl border border-transparent p-1"
+                    className="pointer-events-auto relative grid w-max max-w-full touch-manipulation select-none grid-cols-[max-content_auto] items-center rounded-xl border border-transparent p-1"
                     data-compact={compact}
                     dir={config.direction}
                 >
@@ -380,7 +356,7 @@ export default function Header() {
                                     key={link.href}
                                     className={`grid min-w-0 transition-[grid-template-columns] duration-300 ease-in-out ${hidden ? 'grid-cols-[minmax(0,0fr)]' : 'grid-cols-[minmax(0,1fr)]'} ${!isCurrent && (compact || moving) ? 'overflow-hidden' : 'overflow-visible'}`}
                                     data-moving={!isCurrent && moving}
-                                    inert={!isCurrent && (compact || moving) || undefined}
+                                    inert={hidden || undefined}
                                     onTransitionEnd={onDrawerTransitionEnd}
                                     onTransitionCancel={onDrawerTransitionEnd}
                                 >
@@ -400,7 +376,7 @@ export default function Header() {
                             <div
                                 className={`grid min-w-0 transition-[grid-template-columns] duration-300 ease-in-out ${compact ? 'grid-cols-[minmax(0,0fr)]' : 'grid-cols-[minmax(0,1fr)]'} ${compact || moving ? 'overflow-hidden' : 'overflow-visible'}`}
                                 data-moving={moving}
-                                inert={compact || moving || undefined}
+                                inert={compact || undefined}
                                 onTransitionEnd={onDrawerTransitionEnd}
                                 onTransitionCancel={onDrawerTransitionEnd}
                             >
