@@ -8,7 +8,7 @@ const config = {
     header: {
         nav_links: [
             { name: 'Posts', href: '/posts' },
-            { name: 'Projects', href: '/projects', disabled: true },
+            { name: 'Projects', href: '/projects' },
             {
                 name: 'Art',
                 href: '/art',

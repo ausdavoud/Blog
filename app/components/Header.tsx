@@ -107,7 +107,7 @@ export function ComingSoon({ children, className = '', side = false }: {
             <span
                 id={`${id}-tooltip`}
                 role="tooltip"
-                className={`pointer-events-none invisible absolute z-50 w-max rounded border border-zinc-300 dark:border-zinc-700 backdrop-blur-sm ${!side ? 'bg-zinc-50/50' : 'bg-zinc-50'} dark:bg-neutral-900 ${side ? 'backdrop-blur-sm' : ''} px-2 pt-1 pb-1.5 text-xs font-normal leading-none whitespace-nowrap text-neutral-500 dark:text-neutral-200 shadow-lg [@media(hover:hover)]:group-hover/soon:visible group-focus/soon:visible ${
+                className={`pointer-events-none invisible absolute z-50 w-max rounded border border-zinc-300 dark:border-zinc-700 backdrop-blur-sm ${!side ? 'bg-zinc-50/50' : 'bg-zinc-50'} dark:bg-neutral-900 ${side ? 'backdrop-blur-sm' : ''} px-2 pt-1 pb-1.5 text-xs font-normal leading-none whitespace-nowrap text-neutral-500 dark:text-neutral-200 shadow-lg [@media(hover:hover)]:group-hover/soon:visible group-focus-visible/soon:visible ${
                     side
                         ? 'right-full top-1/2 mr-4 -translate-y-1/2'
                         : 'left-1/2 top-full mt-3.5 -translate-x-1/2'

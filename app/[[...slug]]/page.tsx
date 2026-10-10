@@ -7,6 +7,7 @@ import config from "@/config";
 import { PostData } from "../types";
 import path from "path";
 import Header from "../components/Header";
+import { getProjectSections } from "../components/Projects";
 
 export async function generateMetadata({ params: routeParams }: { params: Promise<{ slug?: string | string[] }> }) {
     const params = await routeParams
@@ -15,7 +16,7 @@ export async function generateMetadata({ params: routeParams }: { params: Promis
     else if (Array.isArray(params.slug))
         params.slug = params.slug.join(path.sep)
 
-    const { data } = await getPost(params.slug).catch(() => notFound())
+    const { data } = await getPost(params.slug.startsWith("projects/") ? "projects" : params.slug).catch(() => notFound())
 
     return {
         ...(params.slug ? { title: data.title } : {}),
@@ -38,8 +39,10 @@ export default async function Page({ params: routeParams }: { params: Promise<{ 
     if (Array.isArray(params.slug))
         params.slug = params.slug.join(path.sep)
 
-    const { data, content, components } = await getPost(params.slug).catch(() => { notFound() })
-    const isSectionPage = config.header.nav_links?.some(link =>
+    const projectSection = params.slug.startsWith("projects/") ? params.slug.slice("projects/".length) : undefined
+    const isProjects = params.slug === "projects" || projectSection !== undefined
+    const { data, content, components } = await getPost(isProjects ? "projects" : params.slug).catch(() => { notFound() })
+    const isSectionPage = isProjects || config.header.nav_links?.some(link =>
         [link, ...(link.children ?? [])].some(item => item.href === "/" + params.slug))
 
     return <>
@@ -47,7 +50,8 @@ export default async function Page({ params: routeParams }: { params: Promise<{ 
             <Header />
             <main className={`${params.slug === "" ? "flex flex-col justify-center py-2" : "pt-2 pb-8"} flex-1 w-full`} dir={getMdDirection(data)}>
                 {data.image && <img src={data.image} alt={isSectionPage ? "" : data.title} className="w-full mb-4 rounded-md object-cover" />}
-                {(data.title || data.date) &&
+                {isProjects && <h1 className="sr-only">{data.title}</h1>}
+                {!isProjects && (data.title || data.date) &&
                     <div className={(data.image ? "mb-2" : "my-6")}>
                         {data.title && <h1 className={`text-3xl text-center ${isSectionPage ? "" : "md:text-start"} leading-9 mb-1 block font-medium text-stone-950 dark:text-stone-50`}>{isSectionPage  ? <span className="select-none">•</span> : data.title}</h1>}
                         {data.date &&
@@ -89,7 +93,7 @@ export default async function Page({ params: routeParams }: { params: Promise<{ 
                     [&_.katex]:[font-family:inherit] [&_.katex]:text-[length:1em] [&_.katex]:font-normal
                     [&_.katex-display]:max-w-full [&_.katex-display]:overflow-x-auto [&_.katex-display]:overflow-y-hidden [&_.katex-display]:py-1 [&_.katex-display>.katex]:text-[length:1.21em]
                 ">
-                    <Markdown source={content} components={components} />
+                    <Markdown source={content} components={components} projects={isProjects} projectSection={projectSection} />
                 </article>
             </main >
         </div>
@@ -98,7 +102,8 @@ export default async function Page({ params: routeParams }: { params: Promise<{ 
 
 export async function generateStaticParams() {
     const posts = await getAllPosts({ recursive: true, self: true, log: true })
-    return posts.map((post: PostData) => ({
+    const sections = getProjectSections((await getPost("projects")).content)
+    return [...posts.map((post: PostData) => ({
         slug: post.slug.split(path.sep).slice(1),
-    }))
+    })), ...sections.map(section => ({ slug: ["projects", section.id] }))]
 }

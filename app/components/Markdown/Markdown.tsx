@@ -9,6 +9,10 @@ import { ComingSoon } from "../Header";
 import BinaryPhoto from "../BinaryPhoto";
 import MarkdownLink from "./MarkdownLink";
 import type { ComponentPropsWithoutRef } from "react";
+import ProjectItem, { ProjectTag } from "../ProjectItem";
+import { remarkProjectSections, type ProjectSection } from "../Projects";
+import ProjectsView, { ProjectCollection, ProjectNavigation, ProjectSectionHeading } from "../ProjectsView";
+import { notFound } from "next/navigation";
 
 type MarkdownNode = {
   type: string;
@@ -48,22 +52,27 @@ function remarkDisplayDoubleDollarMath() {
   };
 }
 
-export default function Markdown({
+export default async function Markdown({
   source,
   components,
+  projects = false,
+  projectSection,
 }: {
   source: string;
   components: any;
+  projects?: boolean;
+  projectSection?: string;
 }) {
-  return (
-    <MDXRemote
-      source={source}
-      components={{
+  const sections: ProjectSection[] = [];
+  const content = await MDXRemote({
+      source,
+      components: {
         a: MarkdownLink,
         img: ({ className = "", ...props }: ComponentPropsWithoutRef<'img'>) => <img {...props} className={`object-cover ${className}`} />,
-        ...components, PostCard, ComingSoon, BinaryPhoto,
-      }}
-      options={{
+        ...components, PostCard, ComingSoon, BinaryPhoto, ProjectItem, ProjectTag, ProjectCollection,
+        ...(projects ? { h2: ProjectSectionHeading } : {}),
+      },
+      options: {
         mdxOptions: {
           useDynamicImport: true,
           rehypePlugins: [
@@ -83,9 +92,12 @@ export default function Markdown({
             remarkGfm,
             remarkMath,
             remarkDisplayDoubleDollarMath,
+            ...(projects ? [remarkProjectSections(sections)] : []),
           ],
         },
-      }}
-    />
-  );
+      },
+  });
+
+  if (projectSection && !sections.some(section => section.id === projectSection)) notFound();
+  return projects ? <ProjectsView sections={sections} section={projectSection}><ProjectNavigation sections={sections} />{content}</ProjectsView> : content;
 }
