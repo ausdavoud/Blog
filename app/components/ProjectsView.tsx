@@ -131,7 +131,10 @@ export function ProjectCollection({ section, children }: { section: string; chil
                 if (!element) return
                 const edge = element.getBoundingClientRect().right - 4
                 const next = Array.from(element.querySelectorAll<HTMLElement>('[data-pinned="true"]')).find(card => card.getBoundingClientRect().right > edge + 1)
-                if (next) element.scrollBy({ left: next.getBoundingClientRect().right - edge, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' })
+                if (next) {
+                    const bounds = next.getBoundingClientRect()
+                    element.scrollBy({ left: Math.max(bounds.right - edge, bounds.left - element.getBoundingClientRect().left - 20), behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' })
+                }
                 element.focus({ preventScroll: true })
             }}
             className="absolute right-1 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-zinc-200 bg-white/90 text-neutral-600 backdrop-blur-sm transition-colors hover:border-zinc-300 hover:bg-zinc-100 hover:text-zinc-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-700 dark:border-zinc-700 dark:bg-neutral-900/90 dark:text-zinc-300 dark:hover:border-zinc-600 dark:hover:bg-neutral-800 dark:hover:text-zinc-100 dark:focus-visible:outline-zinc-300"
@@ -207,7 +210,7 @@ export function ProjectNavigation({ sections }: { sections: ProjectSection[] }) 
 
     return <nav
         aria-label="Project sections"
-        className="mb-8 flex flex-wrap gap-x-4 gap-y-2 text-sm xl:fixed xl:left-[calc(50%+22rem)] xl:top-1/2 xl:z-20 xl:mb-0 xl:max-h-[calc(100svh-8rem)] xl:w-52 xl:-translate-y-1/2 xl:flex-col xl:flex-nowrap xl:gap-0 xl:overflow-y-auto xl:p-3"
+        className="mb-8 hidden flex-wrap gap-x-4 gap-y-2 text-sm md:flex xl:fixed xl:left-[calc(50%+22rem)] xl:top-1/2 xl:z-20 xl:mb-0 xl:max-h-[calc(100svh-8rem)] xl:w-52 xl:-translate-y-1/2 xl:flex-col xl:flex-nowrap xl:gap-0 xl:overflow-y-auto xl:p-3"
     >
         {sections.map(item => <a
             key={item.id}

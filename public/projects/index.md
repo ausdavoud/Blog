@@ -2,14 +2,6 @@
 title: Projects
 ---
 
-<div className="group-data-[view=all]/projects:invisible">
-
-Some things I've worked on, from coursework and research to professional work.
-
-*Placeholder entries for now; project details and links will follow.*
-
-</div>
-
 ## Code
 
 <ProjectCollection section="code">
