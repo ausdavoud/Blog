@@ -179,13 +179,13 @@ export default function CometScrollbar({ targetRef, horizontal = false, label = 
         }}
     >
         <svg aria-hidden="true" className="block h-full w-full overflow-hidden">
-            <line x1={horizontal ? 0 : 12} y1={horizontal ? 12 : 0} x2={horizontal ? view.length : 12} y2={horizontal ? 12 : view.length} className="stroke-sky-600/15 dark:stroke-sky-400/15" />
-            <g className="fill-sky-600 font-mono text-[9px] dark:fill-sky-400" textAnchor="middle" dominantBaseline="central">
+            <line x1={horizontal ? 0 : 12} y1={horizontal ? 12 : 0} x2={horizontal ? view.length : 12} y2={horizontal ? 12 : view.length} className="stroke-zinc-300/30 dark:stroke-zinc-300/15" />
+            <g className="fill-zinc-300 font-mono text-[9px]" textAnchor="middle" dominantBaseline="central">
                 {bits.map(bit => <text key={bit.id} x={horizontal ? bit.position : 12 + bit.offset} y={horizontal ? 12 + bit.offset : bit.position} opacity={bit.opacity}>{'01001101'[bit.id % 8]}</text>)}
             </g>
             <g data-scroll-thumb="" className="cursor-grab active:cursor-grabbing">
                 <rect x={horizontal ? view.position : 0} y={horizontal ? 0 : view.position} width={horizontal ? view.thumb : 24} height={horizontal ? 24 : view.thumb} fill="transparent" />
-                <rect x={horizontal ? view.position : 10.5} y={horizontal ? 10.5 : view.position} width={horizontal ? view.thumb : 3} height={horizontal ? 3 : view.thumb} rx={3} className="fill-sky-600  stroke-none transition-colors group-hover/scrollbar:fill-sky-700/60 group-data-[dragging=true]/scrollbar:fill-sky-700/70 group-focus-visible/scrollbar:stroke-sky-600 dark:fill-sky-400/60 dark:group-hover/scrollbar:fill-sky-300/80 dark:group-data-[dragging=true]/scrollbar:fill-sky-300 dark:group-focus-visible/scrollbar:stroke-sky-400" />
+                <rect x={horizontal ? view.position : 10.5} y={horizontal ? 10.5 : view.position} width={horizontal ? view.thumb : 3} height={horizontal ? 3 : view.thumb} rx={3} className="fill-zinc-300 stroke-none transition-colors group-hover/scrollbar:fill-sky-700/60 group-data-[dragging=true]/scrollbar:fill-sky-700/70 group-focus-visible/scrollbar:fill-sky-700/60 group-focus-visible/scrollbar:stroke-sky-600 dark:group-hover/scrollbar:fill-sky-300/80 dark:group-data-[dragging=true]/scrollbar:fill-sky-300 dark:group-focus-visible/scrollbar:fill-sky-300/80 dark:group-focus-visible/scrollbar:stroke-sky-400" />
             </g>
         </svg>
       </div>
@@ -197,7 +197,7 @@ export default function CometScrollbar({ targetRef, horizontal = false, label = 
                         marker.heading.tabIndex = -1
                         marker.heading.focus({ preventScroll: true })
                         marker.heading.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth', block: 'start' })
-                    }}><span aria-hidden="true" className="h-0.5 w-2.5 rounded-full bg-sky-600/15 transition-colors group-hover/marker:bg-sky-700/60 group-focus-within/marker:bg-sky-700/60 dark:bg-sky-400/15 dark:group-hover/marker:bg-sky-300/80 dark:group-focus-within/marker:bg-sky-300/80" /></button>
+                    }}><span aria-hidden="true" className="h-0.5 w-2.5 rounded-full bg-zinc-300/30 transition-colors group-hover/marker:bg-sky-700/60 group-focus-within/marker:bg-sky-700/60 dark:bg-zinc-300/15 dark:group-hover/marker:bg-sky-300/80 dark:group-focus-within/marker:bg-sky-300/80" /></button>
                 </foreignObject>
                 <foreignObject aria-hidden="true" x={-272} y={marker.position - 18} width={248} height={36} className="pointer-events-none opacity-0 transition-opacity group-hover/marker:opacity-100 group-focus-within/marker:opacity-100 motion-reduce:transition-none">
                     <div className="flex h-full items-center justify-end"><span className="max-w-full truncate rounded-lg border border-sky-600/20 bg-zinc-50 px-2 py-1 text-xs text-sky-600 dark:border-sky-400/20 dark:bg-neutral-900 dark:text-sky-400">{marker.title}</span></div>

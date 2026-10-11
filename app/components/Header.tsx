@@ -9,7 +9,7 @@ import config from '@/config'
 import type { NavLink } from '@/app/types'
 import ThemeIcon from './ThemeIcon'
 
-const navItem = 'rounded-lg font-medium whitespace-nowrap transition-colors [@media(hover:hover)]:hover:text-sky-700 dark:[@media(hover:hover)]:hover:text-sky-300 focus-visible:text-sky-700 dark:focus-visible:text-sky-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-700 dark:focus-visible:outline-sky-300'
+const navItem = 'rounded-lg font-medium whitespace-nowrap transition-colors [@media(hover:hover)]:hover:text-neutral-800 dark:[@media(hover:hover)]:hover:text-neutral-200 focus-visible:text-neutral-800 dark:focus-visible:text-neutral-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-700 dark:focus-visible:outline-zinc-300'
 
 const NAV_TRANSITION_MS = 300
 
@@ -161,7 +161,7 @@ function NavigationItem({ link, pathname, current = false, compact = false, onNa
     const [open, setOpen] = useState(false)
     const root = useRef<HTMLDivElement>(null)
     const pointerType = useRef('')
-    const className = `${navItem} px-1.5 py-px text-sm leading-6 min-[460px]:px-2.5 ${current ? 'bg-neutral-500/10 dark:bg-zinc-400/10 text-stone-950 dark:text-stone-50' : 'text-neutral-500 dark:text-zinc-400'}`
+    const className = `${navItem} px-1.5 py-px text-sm leading-6 min-[460px]:px-2.5 ${current ? 'text-stone-950 dark:text-stone-50' : 'text-neutral-500 dark:text-zinc-400'}`
     const close = () => setOpen(false)
 
     useEffect(() => {
@@ -256,9 +256,31 @@ export default function Header() {
     const [{ compact, moving }, setDrawer] = useState({ compact: false, moving: false })
     const [brandExpanded, setBrandExpanded] = useState(false)
     const [brandHovered, setBrandHovered] = useState(false)
+    const [hoveredItem, setHoveredItem] = useState<string | null>(null)
+    const [highlight, setHighlight] = useState({ x: 0, y: 0, width: 0, height: 0, opacity: 0, animate: false })
     const links = config.header.nav_links ?? []
     const matches = (href: string) => pathname === href || (href !== '/' && pathname.startsWith(`${href}/`))
     const current = links.find(link => matches(link.href) || link.children?.some(child => matches(child.href)))
+
+    useEffect(() => {
+        const nav = navbar.current
+        if (!nav) return
+        const update = () => {
+            const item = nav.querySelector<HTMLElement>('[data-nav-highlighted="true"]')
+            if (!item) {
+                setHighlight(previous => ({ ...previous, opacity: 0 }))
+                return
+            }
+            const bounds = item.getBoundingClientRect()
+            const origin = nav.getBoundingClientRect()
+            setHighlight(previous => ({ x: bounds.left - origin.left - nav.clientLeft, y: bounds.top - origin.top - nav.clientTop, width: bounds.width, height: bounds.height, opacity: 1, animate: previous.opacity > 0 }))
+        }
+        update()
+        const observer = new ResizeObserver(update)
+        observer.observe(nav)
+        nav.querySelectorAll('[data-nav-item]').forEach(item => observer.observe(item))
+        return () => observer.disconnect()
+    }, [hoveredItem, current?.href, compact])
 
     useEffect(() => {
         setMounted(true)
@@ -338,16 +360,20 @@ export default function Header() {
                     className="pointer-events-auto relative grid w-max max-w-full touch-manipulation select-none grid-cols-[max-content_auto] items-center rounded-xl border border-transparent p-1"
                     data-compact={compact}
                     dir={config.direction}
+                    onPointerLeave={() => setHoveredItem(null)}
                 >
                     {/* Unified backdrop blur behind navbar */}
                     <span
                         aria-hidden="true"
                         className="pointer-events-none absolute -inset-px -z-10 rounded-xl border border-zinc-300/50 dark:border-zinc-800/50 bg-zinc-50/50 dark:bg-neutral-900/75 shadow-sm backdrop-blur-md"
                     />
+                    <svg aria-hidden="true" className="pointer-events-none absolute inset-0 h-full w-full overflow-visible">
+                        <rect x={highlight.x} y={highlight.y} width={highlight.width} height={highlight.height} rx={8} opacity={highlight.opacity} className={`fill-neutral-500/10 duration-300 ease-in-out motion-reduce:transition-none dark:fill-zinc-400/10 ${highlight.animate ? 'transition-all' : 'transition-opacity'}`} />
+                    </svg>
                     <div className={`relative z-10 flex items-center justify-center transition-[border-inline-end-width] duration-300 ease-in-out ${compact && !current ? 'border-e-0 border-transparent' : 'border-e border-zinc-300 dark:border-zinc-800'}`}>
                         <MorphingBrand name={config.blog_name} compact={compact} expanded={brandExpanded} hovered={brandHovered} onHover={() => onBrandHoverChange(true)} onExpandedChange={onBrandExpansionChange} onNavigate={onNavigate} />
                     </div>
-                    <div className={`flex min-w-0 items-center justify-self-center transition-[padding-inline-start] duration-300 ease-in-out ${compact && !current ? 'ps-0' : 'ps-1.5'}`}>
+                    <div className={`relative z-10 flex min-w-0 items-center justify-self-center transition-[padding-inline-start] duration-300 ease-in-out ${compact && !current ? 'ps-0' : 'ps-1.5'}`}>
                         {links.map(link => {
                             const isCurrent = link === current
                             const hidden = compact && !isCurrent
@@ -355,6 +381,10 @@ export default function Header() {
                                 <div
                                     key={link.href}
                                     className={`grid min-w-0 transition-[grid-template-columns] duration-300 ease-in-out ${hidden ? 'grid-cols-[minmax(0,0fr)]' : 'grid-cols-[minmax(0,1fr)]'} ${!isCurrent && (compact || moving) ? 'overflow-hidden' : 'overflow-visible'}`}
+                                    data-nav-item={link.href}
+                                    data-nav-highlighted={(compact ? current?.href : hoveredItem ?? current?.href) === link.href}
+                                    onPointerEnter={event => { if (event.pointerType === 'mouse') setHoveredItem(link.href) }}
+                                    onPointerLeave={() => setHoveredItem(null)}
                                     data-moving={!isCurrent && moving}
                                     inert={hidden || undefined}
                                     onTransitionEnd={onDrawerTransitionEnd}
