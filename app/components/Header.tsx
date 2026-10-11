@@ -265,7 +265,7 @@ export default function Header() {
     useEffect(() => {
         const nav = navbar.current
         if (!nav) return
-        const update = () => {
+        const update = (animate = false) => {
             const item = nav.querySelector<HTMLElement>('[data-nav-highlighted="true"]')
             if (!item) {
                 setHighlight(previous => ({ ...previous, opacity: 0 }))
@@ -273,14 +273,19 @@ export default function Header() {
             }
             const bounds = item.getBoundingClientRect()
             const origin = nav.getBoundingClientRect()
-            setHighlight(previous => ({ x: bounds.left - origin.left - nav.clientLeft, y: bounds.top - origin.top - nav.clientTop, width: bounds.width, height: bounds.height, opacity: 1, animate: previous.opacity > 0 }))
+            const x = bounds.left - origin.left - nav.clientLeft
+            const y = bounds.top - origin.top - nav.clientTop
+            setHighlight(previous => {
+                if (previous.opacity === 1 && previous.x === x && previous.y === y && previous.width === bounds.width && previous.height === bounds.height) return previous
+                return { x, y, width: bounds.width, height: bounds.height, opacity: 1, animate: animate && previous.opacity > 0 }
+            })
         }
-        update()
-        const observer = new ResizeObserver(update)
+        update(!moving)
+        const observer = new ResizeObserver(() => update())
         observer.observe(nav)
         nav.querySelectorAll('[data-nav-item]').forEach(item => observer.observe(item))
         return () => observer.disconnect()
-    }, [hoveredItem, current?.href, compact])
+    }, [hoveredItem, current?.href, compact, moving])
 
     useEffect(() => {
         setMounted(true)
@@ -368,7 +373,7 @@ export default function Header() {
                         className="pointer-events-none absolute -inset-px -z-10 rounded-xl border border-zinc-300/50 dark:border-zinc-800/50 bg-zinc-50/50 dark:bg-neutral-900/75 shadow-sm backdrop-blur-md"
                     />
                     <svg aria-hidden="true" className="pointer-events-none absolute inset-0 h-full w-full overflow-visible">
-                        <rect x={highlight.x} y={highlight.y} width={highlight.width} height={highlight.height} rx={8} opacity={highlight.opacity} className={`fill-neutral-500/10 duration-300 ease-in-out motion-reduce:transition-none dark:fill-zinc-400/10 ${highlight.animate ? 'transition-all' : 'transition-opacity'}`} />
+                        <rect x={highlight.x} y={highlight.y} width={highlight.width} height={highlight.height} rx={8} opacity={highlight.opacity} className={`fill-neutral-500/10 duration-300 ease-in-out motion-reduce:transition-none dark:fill-zinc-400/10 ${highlight.animate && !moving ? 'transition-all' : 'transition-opacity'}`} />
                     </svg>
                     <div className={`relative z-10 flex items-center justify-center transition-[border-inline-end-width] duration-300 ease-in-out ${compact && !current ? 'border-e-0 border-transparent' : 'border-e border-zinc-300 dark:border-zinc-800'}`}>
                         <MorphingBrand name={config.blog_name} compact={compact} expanded={brandExpanded} hovered={brandHovered} onHover={() => onBrandHoverChange(true)} onExpandedChange={onBrandExpansionChange} onNavigate={onNavigate} />

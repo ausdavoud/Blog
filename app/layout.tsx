@@ -5,6 +5,7 @@ import Providers from './components/providers'
 import fonts from './utils/font'
 import GoogleAnalytics from './components/GoogleAnalytics'
 import CometScrollbar from './components/CometScrollbar'
+import Header from './components/Header'
 
 export const metadata: Metadata = {
   metadataBase: new URL(config.site_url),
@@ -33,6 +34,7 @@ export default function RootLayout({
         style={{ fontFamily }}>
         <Providers>
           <CometScrollbar />
+          <Header />
           <div className="flex flex-1 w-full justify-center gap-8">
             {children}
           </div>

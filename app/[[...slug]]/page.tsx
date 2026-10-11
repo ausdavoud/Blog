@@ -6,7 +6,6 @@ import { getMdAuthors, getMdDirection, getMdLanguage } from "@/app/actions/mdPro
 import config from "@/config";
 import { PostData } from "../types";
 import path from "path";
-import Header from "../components/Header";
 import { getProjectSections } from "../components/Projects";
 
 export async function generateMetadata({ params: routeParams }: { params: Promise<{ slug?: string | string[] }> }) {
@@ -47,7 +46,6 @@ export default async function Page({ params: routeParams }: { params: Promise<{ 
 
     return <>
         <div className="flex flex-col items-center max-w-screen-sm mx-8 min-w-0 flex-1">
-            <Header />
             <main className={`${params.slug === "" ? "flex flex-col justify-center py-2" : "pt-2 pb-8"} flex-1 w-full`} dir={getMdDirection(data)}>
                 {data.image && <img src={data.image} alt={isSectionPage ? "" : data.title} className="w-full mb-4 rounded-md object-cover" />}
                 {isProjects && <h1 className="sr-only">{data.title}</h1>}
