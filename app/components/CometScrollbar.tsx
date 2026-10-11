@@ -27,6 +27,7 @@ export default function CometScrollbar({ targetRef, horizontal = false, label = 
         const bar = track.current
         if (!element || !bar || window.matchMedia('(forced-colors: active)').matches) return
         target.current = element
+        element.setAttribute('data-comet-scrollbar', '')
         const motion = window.matchMedia('(prefers-reduced-motion: reduce)')
         let particles: (Omit<Bit, 'opacity'> & { born: number })[] = []
         let frame = 0
@@ -78,7 +79,6 @@ export default function CometScrollbar({ targetRef, horizontal = false, label = 
             }
             metrics.current = { length, thumb, position, max, value }
             setView(metrics.current)
-            element.toggleAttribute('data-comet-scrollbar', max > 0)
         }
         const onScroll = () => update(true)
         const clearTrail = () => {
@@ -185,7 +185,7 @@ export default function CometScrollbar({ targetRef, horizontal = false, label = 
             </g>
             <g data-scroll-thumb="" className="cursor-grab active:cursor-grabbing">
                 <rect x={horizontal ? view.position : 0} y={horizontal ? 0 : view.position} width={horizontal ? view.thumb : 24} height={horizontal ? 24 : view.thumb} fill="transparent" />
-                <rect x={horizontal ? view.position : 9} y={horizontal ? 9 : view.position} width={horizontal ? view.thumb : 6} height={horizontal ? 6 : view.thumb} rx={3} className="fill-sky-600/50 stroke-none transition-colors group-hover/scrollbar:fill-sky-700/60 group-data-[dragging=true]/scrollbar:fill-sky-700/70 group-focus-visible/scrollbar:stroke-sky-600 dark:fill-sky-400/60 dark:group-hover/scrollbar:fill-sky-300/80 dark:group-data-[dragging=true]/scrollbar:fill-sky-300 dark:group-focus-visible/scrollbar:stroke-sky-400" />
+                <rect x={horizontal ? view.position : 10.5} y={horizontal ? 10.5 : view.position} width={horizontal ? view.thumb : 3} height={horizontal ? 3 : view.thumb} rx={3} className="fill-sky-600  stroke-none transition-colors group-hover/scrollbar:fill-sky-700/60 group-data-[dragging=true]/scrollbar:fill-sky-700/70 group-focus-visible/scrollbar:stroke-sky-600 dark:fill-sky-400/60 dark:group-hover/scrollbar:fill-sky-300/80 dark:group-data-[dragging=true]/scrollbar:fill-sky-300 dark:group-focus-visible/scrollbar:stroke-sky-400" />
             </g>
         </svg>
       </div>

@@ -27,7 +27,7 @@ export default function RootLayout({
     ? fonts.map(f => f.style.fontFamily.split(",")[0]).join(", ")
     : fonts.style.fontFamily
   return (
-    <html id="page-scroll" lang="en" className="overflow-y-scroll data-[comet-scrollbar]:[scrollbar-width:none] data-[comet-scrollbar]:[&::-webkit-scrollbar]:hidden" suppressHydrationWarning>
+    <html id="page-scroll" lang="en" className="overflow-y-auto data-[comet-scrollbar]:[scrollbar-width:none] data-[comet-scrollbar]:[&::-webkit-scrollbar]:hidden" suppressHydrationWarning>
       <GoogleAnalytics />
       <body className="flex h-full min-h-svh w-full flex-col items-center bg-zinc-50 dark:bg-neutral-900 text-neutral-800 dark:text-neutral-200"
         style={{ fontFamily }}>
