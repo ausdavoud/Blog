@@ -5,6 +5,7 @@ import type { ComponentPropsWithoutRef, MouseEvent, ReactNode } from 'react'
 import { ArrowLeft, ArrowRight, ChevronDown, ChevronRight } from 'lucide-react'
 import Link from 'next/link'
 import type { ProjectSection } from './Projects'
+import CometScrollbar from './CometScrollbar'
 
 const ProjectsContext = createContext<string | null>(null)
 
@@ -117,7 +118,7 @@ export function ProjectCollection({ section, children }: { section: string; chil
             drag.current = null
         }}
         onDragStart={event => event.preventDefault()}
-        className="flex gap-4 overflow-x-auto overscroll-x-contain px-1 pb-3 pt-1 select-none cursor-grab active:cursor-grabbing focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-700 dark:focus-visible:outline-zinc-300"
+        className="flex gap-4 overflow-x-auto overscroll-x-contain px-1 pb-6 pt-1 select-none cursor-grab active:cursor-grabbing data-[comet-scrollbar]:[scrollbar-width:none] data-[comet-scrollbar]:[&::-webkit-scrollbar]:hidden focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-700 dark:focus-visible:outline-zinc-300"
       >{children}</div>
       {edges.left && <div aria-hidden="true" className="pointer-events-none absolute inset-y-1 left-0 w-12 bg-gradient-to-r from-zinc-50 via-zinc-50/70 to-transparent backdrop-blur-sm [mask-image:linear-gradient(to_right,black,transparent)] dark:from-neutral-900 dark:via-neutral-900/70" />}
       {edges.right && <>
@@ -140,6 +141,7 @@ export function ProjectCollection({ section, children }: { section: string; chil
             className="absolute right-1 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-zinc-200 bg-white/90 text-neutral-600 backdrop-blur-sm transition-colors hover:border-zinc-300 hover:bg-zinc-100 hover:text-zinc-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-700 dark:border-zinc-700 dark:bg-neutral-900/90 dark:text-zinc-300 dark:hover:border-zinc-600 dark:hover:bg-neutral-800 dark:hover:text-zinc-100 dark:focus-visible:outline-zinc-300"
         ><ChevronRight aria-hidden="true" size={20} strokeWidth={1.5} /></button>
       </>}
+      <CometScrollbar targetRef={slider} horizontal label={`${section} projects scroll`} />
     </div>
 }
 

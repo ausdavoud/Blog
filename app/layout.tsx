@@ -4,6 +4,7 @@ import config from '@/config'
 import Providers from './components/providers'
 import fonts from './utils/font'
 import GoogleAnalytics from './components/GoogleAnalytics'
+import CometScrollbar from './components/CometScrollbar'
 
 export const metadata: Metadata = {
   metadataBase: new URL(config.site_url),
@@ -26,11 +27,12 @@ export default function RootLayout({
     ? fonts.map(f => f.style.fontFamily.split(",")[0]).join(", ")
     : fonts.style.fontFamily
   return (
-    <html lang="en" className="overflow-y-scroll" suppressHydrationWarning>
+    <html id="page-scroll" lang="en" className="overflow-y-scroll data-[comet-scrollbar]:[scrollbar-width:none] data-[comet-scrollbar]:[&::-webkit-scrollbar]:hidden" suppressHydrationWarning>
       <GoogleAnalytics />
       <body className="flex h-full min-h-svh w-full flex-col items-center bg-zinc-50 dark:bg-neutral-900 text-neutral-800 dark:text-neutral-200"
         style={{ fontFamily }}>
         <Providers>
+          <CometScrollbar />
           <div className="flex flex-1 w-full justify-center gap-8">
             {children}
           </div>

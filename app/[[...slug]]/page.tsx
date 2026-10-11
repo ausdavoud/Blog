@@ -65,11 +65,12 @@ export default async function Page({ params: routeParams }: { params: Promise<{ 
                         }
                     </div>
                 }
-                <article className="
+                <article data-scroll-headings={!isSectionPage && params.slug.startsWith('posts/') ? true : undefined} className="
                     text-base leading-relaxed
                     [&_*]:[unicode-bidi:plaintext]
                     [&_:not(pre)>code]:text-sm [&_:not(pre)>code]:bg-stone-300/30 dark:[&_:not(pre)>code]:bg-stone-500/30 [&_:not(pre)>code]:text-zinc-900 dark:[&_:not(pre)>code]:text-neutral-200 [&_:not(pre)>code]:mx-0.5 [&_:not(pre)>code]:whitespace-normal [&_:not(pre)>code]:rounded [&_:not(pre)>code]:[overflow-wrap:anywhere] [&_:not(pre)>code]:px-1.5 [&_:not(pre)>code]:py-0.5
                     [&_p]:py-1.5
+                    [&_:is(h1,h2,h3,h4,h5,h6)]:scroll-mt-24
                     [&_hr]:pt-8 [&_hr]:opacity-60 dark:[&_hr]:opacity-10
                     [&_strong]:font-semibold
                     [&_h1]:mt-8 [&_h1]:mb-1 [&_h1]:text-3xl [&_h1]:leading-7 [&_h1]:font-medium [&_h1]:text-stone-950 dark:[&_h1]:text-stone-50
