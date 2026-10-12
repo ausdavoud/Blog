@@ -2,10 +2,9 @@
 
 import { createContext, useContext, useEffect, useId, useRef, useState } from 'react'
 import type { ComponentPropsWithoutRef, MouseEvent, ReactNode } from 'react'
-import { ArrowLeft, ArrowRight, ChevronDown, ChevronRight } from 'lucide-react'
+import { ArrowLeft, ArrowRight, ChevronDown } from 'lucide-react'
 import Link from 'next/link'
 import type { ProjectSection } from './Projects'
-import CometScrollbar from './CometScrollbar'
 
 const ProjectsContext = createContext<string | null>(null)
 
@@ -13,7 +12,7 @@ export function ProjectDetails({ title, text }: { title: string; text: string })
     const [expanded, setExpanded] = useState(false)
     const id = useId()
 
-    return <div data-expanded={expanded} className={`peer/details relative transition-[padding-bottom] duration-500 ease-in-out group-data-[view=pinned]/projects:hidden motion-reduce:transition-none ${expanded ? 'pb-8' : 'pb-0'}`}>
+    return <div data-expanded={expanded} className={`peer/details relative transition-[padding-bottom] duration-500 ease-in-out motion-reduce:transition-none ${expanded ? 'pb-8' : 'pb-0'}`}>
         <div id={id} inert={!expanded || undefined} aria-hidden={!expanded} className={`grid transition-[grid-template-rows,opacity] duration-500 ease-in-out motion-reduce:transition-none ${expanded ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}`}>
             <div className="min-h-0 overflow-hidden"><div className="pt-3 whitespace-pre-line text-sm leading-relaxed text-neutral-600 dark:text-neutral-300">{text}</div></div>
         </div>
@@ -50,7 +49,7 @@ export function ProjectSectionHeading({ id, className = '', children, ...props }
         {id && (expanded || id !== 'research-labs') && <Link
             href={expanded ? '/projects' : `/projects/${encodeURIComponent(id)}`}
             aria-label={expanded ? 'Back to pinned projects' : `See all ${typeof children === 'string' ? children : 'projects'}`}
-            className="inline-flex min-h-11 shrink-0 items-center gap-2 rounded-xl border border-zinc-200/70 bg-white px-3 text-sm font-normal leading-5 text-neutral-600 no-underline transition-colors hover:border-zinc-300 hover:bg-zinc-100 hover:text-zinc-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-700 dark:border-zinc-700 dark:bg-neutral-800/40 dark:text-zinc-300 dark:hover:border-zinc-600 dark:hover:bg-neutral-800 dark:hover:text-zinc-100 dark:focus-visible:outline-zinc-300"
+            className="inline-flex min-h-11 shrink-0 items-center gap-2 text-sm font-medium leading-5 text-sky-600 no-underline transition-colors hover:text-sky-700 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-700 dark:text-sky-400 dark:hover:text-sky-300 dark:focus-visible:outline-zinc-300"
         >
             {expanded && <ArrowLeft aria-hidden="true" size={16} strokeWidth={1.5} />}
             {expanded ? 'Back' : 'See all'}
@@ -61,88 +60,9 @@ export function ProjectSectionHeading({ id, className = '', children, ...props }
 
 export function ProjectCollection({ section, children }: { section: string; children: ReactNode }) {
     const activeSection = useContext(ProjectsContext)
-    const drag = useRef<{ x: number; scrollLeft: number; moved: boolean } | null>(null)
-    const slider = useRef<HTMLDivElement>(null)
-    const [edges, setEdges] = useState({ left: false, right: false })
-
-    useEffect(() => {
-        const element = slider.current
-        if (!element) return
-        const updateEdges = () => {
-            const next = { left: element.scrollLeft > 1, right: element.scrollLeft < element.scrollWidth - element.clientWidth - 1 }
-            setEdges(previous => previous.left === next.left && previous.right === next.right ? previous : next)
-        }
-        updateEdges()
-        element.addEventListener('scroll', updateEdges, { passive: true })
-        const observer = new ResizeObserver(updateEdges)
-        observer.observe(element)
-        return () => {
-            element.removeEventListener('scroll', updateEdges)
-            observer.disconnect()
-        }
-    }, [activeSection, children])
-
     if (activeSection && activeSection !== section) return null
 
-    if (activeSection) return <div id={`${section}-collection`} className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">{children}</div>
-
-    return <div id={`${section}-collection`} className="relative -mx-1 mt-6">
-      <div
-        ref={slider}
-        id={`${section}-slider`}
-        role="region"
-        aria-labelledby={section}
-        tabIndex={0}
-        onPointerDown={event => {
-            if (event.pointerType !== 'mouse' || event.button !== 0) return
-            drag.current = { x: event.clientX, scrollLeft: event.currentTarget.scrollLeft, moved: false }
-        }}
-        onPointerMove={event => {
-            if (event.pointerType !== 'mouse' || !drag.current || !(event.buttons & 1)) return
-            const distance = event.clientX - drag.current.x
-            if (!drag.current.moved && Math.abs(distance) < 6) return
-            drag.current.moved = true
-            event.currentTarget.setPointerCapture(event.pointerId)
-            event.currentTarget.scrollLeft = drag.current.scrollLeft - distance
-        }}
-        onPointerUp={() => {
-            if (!drag.current?.moved) drag.current = null
-        }}
-        onPointerCancel={() => {
-            drag.current = null
-        }}
-        onClickCapture={event => {
-            if (!drag.current?.moved) return
-            event.preventDefault()
-            event.stopPropagation()
-            drag.current = null
-        }}
-        onDragStart={event => event.preventDefault()}
-        className="flex gap-4 overflow-x-auto overscroll-x-contain px-1 pb-6 pt-1 select-none cursor-grab active:cursor-grabbing data-[comet-scrollbar]:[scrollbar-width:none] data-[comet-scrollbar]:[&::-webkit-scrollbar]:hidden focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-700 dark:focus-visible:outline-zinc-300"
-      >{children}</div>
-      {edges.left && <div aria-hidden="true" className="pointer-events-none absolute inset-y-1 left-0 w-12 bg-gradient-to-r from-zinc-50 via-zinc-50/70 to-transparent backdrop-blur-sm [mask-image:linear-gradient(to_right,black,transparent)] dark:from-neutral-900 dark:via-neutral-900/70" />}
-      {edges.right && <>
-        <div aria-hidden="true" className="pointer-events-none absolute inset-y-1 right-0 w-24 bg-gradient-to-l from-zinc-50 via-zinc-50/70 to-transparent backdrop-blur-sm [mask-image:linear-gradient(to_left,black_35%,transparent)] dark:from-neutral-900 dark:via-neutral-900/70" />
-        <button
-            type="button"
-            aria-label={`Show next ${section} project`}
-            aria-controls={`${section}-slider`}
-            onClick={() => {
-                const element = slider.current
-                if (!element) return
-                const edge = element.getBoundingClientRect().right - 4
-                const next = Array.from(element.querySelectorAll<HTMLElement>('[data-pinned="true"]')).find(card => card.getBoundingClientRect().right > edge + 1)
-                if (next) {
-                    const bounds = next.getBoundingClientRect()
-                    element.scrollBy({ left: Math.max(bounds.right - edge, bounds.left - element.getBoundingClientRect().left - 20), behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' })
-                }
-                element.focus({ preventScroll: true })
-            }}
-            className="absolute right-1 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-zinc-200 bg-white/90 text-neutral-600 backdrop-blur-sm transition-colors hover:border-zinc-300 hover:bg-zinc-100 hover:text-zinc-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-700 dark:border-zinc-700 dark:bg-neutral-900/90 dark:text-zinc-300 dark:hover:border-zinc-600 dark:hover:bg-neutral-800 dark:hover:text-zinc-100 dark:focus-visible:outline-zinc-300"
-        ><ChevronRight aria-hidden="true" size={20} strokeWidth={1.5} /></button>
-      </>}
-      <CometScrollbar targetRef={slider} horizontal label={`${section} projects scroll`} />
-    </div>
+    return <div id={`${section}-collection`} className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">{children}</div>
 }
 
 export function ProjectNavigation({ sections }: { sections: ProjectSection[] }) {

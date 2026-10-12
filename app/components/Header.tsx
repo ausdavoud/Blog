@@ -4,7 +4,8 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useTheme } from 'next-themes'
 import { ChevronDown } from 'lucide-react'
-import { useCallback, useEffect, useId, useRef, useState, type MouseEventHandler, type ReactNode, type TransitionEvent } from 'react'
+import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState, type MouseEventHandler, type ReactNode, type TransitionEvent } from 'react'
+import { flushSync } from 'react-dom'
 import config from '@/config'
 import type { NavLink } from '@/app/types'
 import ThemeIcon from './ThemeIcon'
@@ -294,7 +295,7 @@ export default function Header() {
         if (touchHighlightTimer.current) clearTimeout(touchHighlightTimer.current)
     }, [])
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         const nav = navbar.current
         if (!nav) return
         const update = (animate = false) => {
@@ -313,7 +314,7 @@ export default function Header() {
             })
         }
         update(!moving)
-        const observer = new ResizeObserver(() => update())
+        const observer = new ResizeObserver(() => flushSync(() => update()))
         observer.observe(nav)
         nav.querySelectorAll('[data-nav-item]').forEach(item => observer.observe(item))
         return () => observer.disconnect()
