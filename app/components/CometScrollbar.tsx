@@ -185,7 +185,7 @@ export default function CometScrollbar({ targetRef, horizontal = false, label = 
             </g>
             <g data-scroll-thumb="" className="cursor-grab active:cursor-grabbing">
                 <rect x={horizontal ? view.position : 0} y={horizontal ? 0 : view.position} width={horizontal ? view.thumb : 24} height={horizontal ? 24 : view.thumb} fill="transparent" />
-                <rect x={horizontal ? view.position : 10.5} y={horizontal ? 10.5 : view.position} width={horizontal ? view.thumb : 3} height={horizontal ? 3 : view.thumb} rx={3} className="fill-zinc-300 stroke-none transition-colors group-hover/scrollbar:fill-sky-700/60 group-data-[dragging=true]/scrollbar:fill-sky-700/70 group-focus-visible/scrollbar:fill-sky-700/60 group-focus-visible/scrollbar:stroke-sky-600 dark:group-hover/scrollbar:fill-sky-300/80 dark:group-data-[dragging=true]/scrollbar:fill-sky-300 dark:group-focus-visible/scrollbar:fill-sky-300/80 dark:group-focus-visible/scrollbar:stroke-sky-400" />
+                <rect x={horizontal ? view.position : 9.5} y={horizontal ? 9.5 : view.position} width={horizontal ? view.thumb : 5} height={horizontal ? 5 : view.thumb} rx={3} className="fill-zinc-300 stroke-none transition-colors group-hover/scrollbar:fill-sky-700/60 group-data-[dragging=true]/scrollbar:fill-sky-700/70 group-focus-visible/scrollbar:fill-sky-700/60 group-focus-visible/scrollbar:stroke-sky-600 dark:group-hover/scrollbar:fill-sky-300/80 dark:group-data-[dragging=true]/scrollbar:fill-sky-300 dark:group-focus-visible/scrollbar:fill-sky-300/80 dark:group-focus-visible/scrollbar:stroke-sky-400" />
             </g>
         </svg>
       </div>

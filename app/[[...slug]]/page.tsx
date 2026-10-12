@@ -16,18 +16,32 @@ export async function generateMetadata({ params: routeParams }: { params: Promis
         params.slug = params.slug.join(path.sep)
 
     const { data } = await getPost(params.slug.startsWith("projects/") ? "projects" : params.slug).catch(() => notFound())
+    const title = data.title ? `${data.title} | ${config.blog_name}` : config.blog_name
+    const description = data.spoiler || config.description
+    const isArticle = params.slug.startsWith("posts/")
+    const images = data.image
+        ? [{ url: new URL(data.image, new URL(`/${params.slug}/`, config.site_url)), alt: data.title || config.blog_name }]
+        : [{ url: '/whome-2.jpg', width: 600, height: 800, alt: config.blog_name }]
 
     return {
         ...(params.slug ? { title: data.title } : {}),
-        description: data.spoiler || `${config.blog_name}'s post`,
+        description,
         keywords: data.keywords || "",
         authors: getMdAuthors(data),
+        alternates: { canonical: `/${params.slug}` },
         openGraph: {
-            images: data.image || "",
-            publishedTime: data.date ? new Date(data.date).toISOString() : "",
-            type: "article",
-            authors: getMdAuthors(data)
-        }
+            title,
+            description,
+            siteName: config.blog_name,
+            url: `/${params.slug}`,
+            images,
+            type: isArticle ? "article" : "website",
+            ...(isArticle ? {
+                publishedTime: data.date ? new Date(data.date).toISOString() : undefined,
+                authors: getMdAuthors(data)
+            } : {})
+        },
+        twitter: { card: 'summary', title, description, images }
     }
 }
 

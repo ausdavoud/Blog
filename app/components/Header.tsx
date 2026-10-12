@@ -94,20 +94,47 @@ export function ComingSoon({ children, className = '', side = false }: {
     side?: boolean
 }) {
     const id = useId()
+    const root = useRef<HTMLSpanElement>(null)
+    const pointerType = useRef('')
+    const [tapped, setTapped] = useState(false)
+
+    useEffect(() => {
+        if (!tapped) return
+        const dismiss = () => setTapped(false)
+        const onPointerDown = (event: PointerEvent) => {
+            if (!root.current?.contains(event.target as Node)) dismiss()
+        }
+        const onKeyDown = (event: KeyboardEvent) => {
+            if (event.key === 'Escape') dismiss()
+        }
+        document.addEventListener('pointerdown', onPointerDown)
+        document.addEventListener('keydown', onKeyDown)
+        document.addEventListener('scroll', dismiss, true)
+        return () => {
+            document.removeEventListener('pointerdown', onPointerDown)
+            document.removeEventListener('keydown', onKeyDown)
+            document.removeEventListener('scroll', dismiss, true)
+        }
+    }, [tapped])
+
     return (
         <span
+            ref={root}
             role="link"
             aria-disabled="true"
             aria-labelledby={`${id}-label`}
             aria-describedby={`${id}-tooltip`}
             tabIndex={0}
+            onPointerDown={event => { pointerType.current = event.pointerType }}
+            onClick={() => { if (pointerType.current && pointerType.current !== 'mouse') setTapped(value => !value) }}
+            onPointerCancel={() => { pointerType.current = ''; setTapped(false) }}
             className={`group/soon relative inline-block cursor-default rounded-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-700 dark:focus-visible:outline-sky-300 ${className}`}
         >
             <span id={`${id}-label`}>{children}</span>
             <span
                 id={`${id}-tooltip`}
                 role="tooltip"
-                className={`pointer-events-none invisible absolute z-50 w-max rounded border border-zinc-300 dark:border-zinc-700 backdrop-blur-sm ${!side ? 'bg-zinc-50/50' : 'bg-zinc-50'} dark:bg-neutral-900 ${side ? 'backdrop-blur-sm' : ''} px-2 pt-1 pb-1.5 text-xs font-normal leading-none whitespace-nowrap text-neutral-500 dark:text-neutral-200 shadow-lg [@media(hover:hover)]:group-hover/soon:visible group-focus-visible/soon:visible ${
+                className={`pointer-events-none ${tapped ? 'visible' : 'invisible'} absolute z-50 w-max rounded border border-zinc-300 dark:border-zinc-700 backdrop-blur-sm ${!side ? 'bg-zinc-50/50' : 'bg-zinc-50'} dark:bg-neutral-900 ${side ? 'backdrop-blur-sm' : ''} px-2 pt-1 pb-1.5 text-xs font-normal leading-none whitespace-nowrap text-neutral-500 dark:text-neutral-200 shadow-lg [@media(hover:hover)]:group-hover/soon:visible group-focus-visible/soon:visible ${
                     side
                         ? 'right-full top-1/2 mr-4 -translate-y-1/2'
                         : 'left-1/2 top-full mt-3.5 -translate-x-1/2'
@@ -257,10 +284,15 @@ export default function Header() {
     const [brandExpanded, setBrandExpanded] = useState(false)
     const [brandHovered, setBrandHovered] = useState(false)
     const [hoveredItem, setHoveredItem] = useState<string | null>(null)
+    const touchHighlightTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
     const [highlight, setHighlight] = useState({ x: 0, y: 0, width: 0, height: 0, opacity: 0, animate: false })
     const links = config.header.nav_links ?? []
     const matches = (href: string) => pathname === href || (href !== '/' && pathname.startsWith(`${href}/`))
     const current = links.find(link => matches(link.href) || link.children?.some(child => matches(child.href)))
+
+    useEffect(() => () => {
+        if (touchHighlightTimer.current) clearTimeout(touchHighlightTimer.current)
+    }, [])
 
     useEffect(() => {
         const nav = navbar.current
@@ -365,7 +397,7 @@ export default function Header() {
                     className="pointer-events-auto relative grid w-max max-w-full touch-manipulation select-none grid-cols-[max-content_auto] items-center rounded-xl border border-transparent p-1"
                     data-compact={compact}
                     dir={config.direction}
-                    onPointerLeave={() => setHoveredItem(null)}
+                    onPointerLeave={event => { if (event.pointerType === 'mouse') setHoveredItem(null) }}
                 >
                     {/* Unified backdrop blur behind navbar */}
                     <span
@@ -389,7 +421,17 @@ export default function Header() {
                                     data-nav-item={link.href}
                                     data-nav-highlighted={(compact ? current?.href : hoveredItem ?? current?.href) === link.href}
                                     onPointerEnter={event => { if (event.pointerType === 'mouse') setHoveredItem(link.href) }}
-                                    onPointerLeave={() => setHoveredItem(null)}
+                                    onPointerDown={event => {
+                                        if (event.pointerType === 'mouse') return
+                                        if (touchHighlightTimer.current) clearTimeout(touchHighlightTimer.current)
+                                        setHoveredItem(link.href)
+                                        touchHighlightTimer.current = setTimeout(() => setHoveredItem(null), NAV_TRANSITION_MS * 2)
+                                    }}
+                                    onPointerLeave={event => { if (event.pointerType === 'mouse') setHoveredItem(null) }}
+                                    onPointerCancel={() => {
+                                        if (touchHighlightTimer.current) clearTimeout(touchHighlightTimer.current)
+                                        setHoveredItem(null)
+                                    }}
                                     data-moving={!isCurrent && moving}
                                     inert={hidden || undefined}
                                     onTransitionEnd={onDrawerTransitionEnd}

@@ -29,7 +29,7 @@ const config = {
     // These are default values for metadata base. If you have your domain,
     // you can either set it in environment variables or set it here.
     // These will be used for open graph images (sharing preview).
-    site_url: process.env.SITE_URL || "https://example.com"
+    site_url: process.env.SITE_URL || "https://davoud.blog"
 }
 
 module.exports = config;
