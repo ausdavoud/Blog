@@ -8,7 +8,8 @@ import PostCard from "../PostCard";
 import { ComingSoon } from "../Header";
 import BinaryPhoto from "../BinaryPhoto";
 import MarkdownLink from "./MarkdownLink";
-import type { ComponentPropsWithoutRef } from "react";
+import { Children, cloneElement, isValidElement } from "react";
+import type { ComponentPropsWithoutRef, ReactElement, ReactNode } from "react";
 import ProjectItem, { ProjectTag } from "../ProjectItem";
 import { remarkProjectSections, type ProjectSection } from "../Projects";
 import ProjectsView, { ProjectCollection, ProjectNavigation, ProjectSectionHeading } from "../ProjectsView";
@@ -52,6 +53,15 @@ function remarkDisplayDoubleDollarMath() {
   };
 }
 
+function WideThirdCollection({ section, projectSection, children }: { section: string; projectSection?: string; children: ReactNode }) {
+  const items = Children.toArray(children)
+  const cards = items.filter((item): item is ReactElement<{ pinned?: string; wide?: boolean }> => isValidElement(item))
+  const visible = projectSection ? cards : cards.filter(card => card.props.pinned === "true")
+  const wide = (!projectSection && visible.find(card => String(card.props.wide) === "true")) || (visible.length === 3 ? visible[2] : undefined)
+
+  return <ProjectCollection section={section}>{items.map(item => isValidElement(item) ? cloneElement(item as ReactElement<{ wide?: boolean }>, { wide: item === wide }) : item)}</ProjectCollection>
+}
+
 export default async function Markdown({
   source,
   components,
@@ -69,7 +79,8 @@ export default async function Markdown({
       components: {
         a: MarkdownLink,
         img: ({ className = "", ...props }: ComponentPropsWithoutRef<'img'>) => <img {...props} className={`object-cover ${className}`} />,
-        ...components, PostCard, ComingSoon, BinaryPhoto, ProjectItem, ProjectTag, ProjectCollection,
+        ...components, PostCard, ComingSoon, BinaryPhoto, ProjectItem, ProjectTag,
+        ProjectCollection: (props: { section: string; children: ReactNode }) => <WideThirdCollection {...props} projectSection={projectSection} />,
         ...(projects ? { h2: ProjectSectionHeading } : {}),
       },
       options: {

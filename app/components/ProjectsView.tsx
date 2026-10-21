@@ -46,7 +46,7 @@ export function ProjectSectionHeading({ id, className = '', children, ...props }
 
     return <h2 {...props} id={id} tabIndex={-1} className={`${className} flex flex-wrap items-center justify-between gap-3 capitalize`}>
         <span>{children}</span>
-        {id && (expanded || id !== 'research-labs') && <Link
+        {id && <Link
             href={expanded ? '/projects' : `/projects/${encodeURIComponent(id)}`}
             aria-label={expanded ? 'Back to pinned projects' : `See all ${typeof children === 'string' ? children : 'projects'}`}
             className="inline-flex min-h-11 shrink-0 items-center gap-2 text-sm font-medium leading-5 text-sky-600 no-underline transition-colors hover:text-sky-700 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-700 dark:text-sky-400 dark:hover:text-sky-300 dark:focus-visible:outline-zinc-300"

@@ -1,33 +1,29 @@
-import { ArrowRight, Code2, Tag } from 'lucide-react'
+import { ArrowRight, Cable, ChartColumn, ChartScatter, Code2, Globe, Tag, Terminal } from 'lucide-react'
 import Link from 'next/link'
 import { ComingSoon } from './Header'
 import { ProjectDetails } from './ProjectsView'
+import type { LucideIcon } from 'lucide-react'
 import type { ReactNode } from 'react'
 
-// shortcut: Headers share the full sheet; export optimized crops when the artwork is final.
-const headerCrops = {
-    teal: '-left-[32.743%] -top-[58.974%]',
-    cyan: '-left-[151.77%] -top-[58.974%]',
-    purple: '-left-[270.796%] -top-[58.974%]',
-    navy: '-left-[32.743%] -top-[223.077%]',
-    gray: '-left-[151.77%] -top-[223.077%]',
-    mint: '-left-[270.796%] -top-[223.077%]',
-    silver: '-left-[32.743%] -top-[387.692%]',
-    emerald: '-left-[151.77%] -top-[387.692%]',
-    charcoal: '-left-[270.796%] -top-[387.692%]',
-    blue: '-left-[32.743%] -top-[551.795%]',
-    lavender: '-left-[151.77%] -top-[551.795%]',
-    sage: '-left-[270.796%] -top-[551.795%]',
+const technologyLogos: Record<string, string> = {
+    python: 'python.svg', pytorch: 'pytorch.svg', numpy: 'numpy.svg', django: 'django.svg', postgresql: 'postgresql.svg',
+    typescript: 'typescript.svg', react: 'react.svg', tailwind: 'tailwindcss.svg', tailwindcss: 'tailwindcss.svg', c: 'c.svg',
+    linux: 'linux.svg', docker: 'docker.svg', jupyter: 'jupyter.svg', pandas: 'pandas.svg', matplotlib: 'matplotlib.svg',
+    javascript: 'javascript.svg', html: 'html5.svg', css: 'css3.svg', fastapi: 'fastapi.svg', latex: 'latex.svg',
+    'sql server': 'sqlserver.svg', 'risc-v': 'riscv.svg', aiogram: 'telegram.svg', yolov8: 'ultralytics.svg',
+    manim: 'manim.png', pygame: 'pygame.png',
 }
 
-const technologyLogos = new Set(['python', 'pytorch', 'numpy', 'django', 'postgresql', 'typescript', 'react', 'tailwindcss', 'c', 'linux', 'docker', 'jupyter', 'pandas', 'matplotlib'])
+// Tags without a real logo get a lucide glyph instead of the generic tag.
+const technologyGlyphs: Record<string, LucideIcon> = { 'k-means': ChartScatter, xv6: Terminal, sockets: Cable, spss: ChartColumn }
 
 export function ProjectTag({ name, icon }: { name: string; icon?: string }) {
-    const slug = name.toLowerCase() === 'tailwind' ? 'tailwindcss' : name.toLowerCase()
-    const logo = icon ?? (technologyLogos.has(slug) ? `/projects/technology-icons/${slug}.svg` : undefined)
+    const key = name.toLowerCase()
+    const logo = icon ?? (technologyLogos[key] ? `/projects/technology-icons/${technologyLogos[key]}` : undefined)
+    const Glyph = technologyGlyphs[key] ?? Tag
 
     return <span role="img" aria-label={name} title={name} tabIndex={0} className="group/tag relative inline-flex h-9 items-center rounded-full border border-zinc-400/60 bg-zinc-50 px-[7px] text-xs leading-4 text-neutral-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-700 dark:border-zinc-600/60 dark:bg-neutral-900/40 dark:text-zinc-400 dark:focus-visible:outline-zinc-300">
-        {logo ? <span aria-hidden="true" className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-white"><img src={logo} alt={name} className="!mb-0 h-4 w-4 object-contain" /></span> : <Tag aria-hidden="true" size={20} strokeWidth={1.5} className="shrink-0" />}
+        {logo ? <span aria-hidden="true" className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-white"><img src={logo} alt={name} className="!mb-0 h-4 w-4 object-contain" /></span> : <Glyph aria-hidden="true" size={20} strokeWidth={1.5} className="shrink-0" />}
         <span aria-hidden="true" className="grid grid-cols-[minmax(0,0fr)] transition-[grid-template-columns] duration-300 ease-out group-hover/tag:grid-cols-[minmax(0,1fr)] group-focus/tag:grid-cols-[minmax(0,1fr)] motion-reduce:transition-none">
             <span className="overflow-hidden whitespace-nowrap"><span className="pl-1.5 capitalize">{name}</span></span>
         </span>
@@ -37,17 +33,19 @@ export function ProjectTag({ name, icon }: { name: string; icon?: string }) {
     </span>
 }
 
-export default function ProjectItem({ title, description, details, subtitle, href, icon, children, expertise, expertiseShort, header, pinned = 'false' }: {
+export default function ProjectItem({ title, description, details, subtitle, href, demo, icon, children, expertise, expertiseShort, banner, wide = false, pinned = 'false' }: {
     title: string
     description: string
     details?: string
     subtitle?: string
     href?: string
+    demo?: string
     icon?: string
     children?: ReactNode
     expertise?: string
     expertiseShort?: string
-    header?: keyof typeof headerCrops
+    banner?: string
+    wide?: boolean
     pinned?: string
 }) {
     const arrow = <>
@@ -56,12 +54,14 @@ export default function ProjectItem({ title, description, details, subtitle, hre
     </>
     const arrowClasses = 'group/view !flex h-11 w-11 shrink-0 items-center justify-center !rounded-xl border border-zinc-200/70 bg-zinc-50 text-neutral-600 transition-colors hover:border-zinc-300 hover:bg-zinc-100 hover:text-zinc-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-700 dark:border-zinc-700 dark:bg-neutral-900/60 dark:text-zinc-300 dark:hover:border-zinc-600 dark:hover:bg-neutral-800 dark:hover:text-zinc-100 dark:focus-visible:outline-zinc-300'
 
+    const external = (url: string) => /^https?:/.test(url) ? { target: '_blank', rel: 'noopener noreferrer' } : {}
+
     return (
-        <div data-pinned={pinned} className={`group/card relative flex min-w-0 flex-col self-start rounded-3xl border border-zinc-200/70 bg-white p-4 shadow-sm dark:border-zinc-800 dark:bg-neutral-800/40 ${pinned === 'true' ? '' : 'group-data-[view=pinned]/projects:hidden'}`}>
-            {header && <div className="relative -mx-4 -mt-4 mb-4 aspect-[452/195] overflow-hidden rounded-t-3xl">
-                <img src="/projects/header-sheet.png" alt="" className={`absolute h-auto w-[403.54%] !max-w-none transition-[filter] duration-500 group-has-[abbr:hover]/card:blur-sm group-has-[abbr:focus]/card:blur-sm motion-reduce:transition-none ${headerCrops[header]}`} />
+        <div data-pinned={pinned} className={`group/card relative flex min-w-0 flex-col self-start rounded-3xl border border-zinc-200/70 bg-white p-4 shadow-sm dark:border-zinc-800 dark:bg-neutral-800/40 ${wide ? 'sm:col-span-2 sm:flex-row sm:self-stretch' : ''} ${pinned === 'true' ? '' : 'group-data-[view=pinned]/projects:hidden'}`}>
+            {banner && <div className={`relative -mx-4 -mt-4 mb-4 aspect-[452/195] overflow-hidden rounded-t-3xl ${wide ? 'sm:-my-4 sm:mr-4 sm:aspect-auto sm:min-h-64 sm:w-1/2 sm:shrink-0 sm:rounded-l-3xl sm:rounded-tr-none' : ''}`}>
+                <img src={banner} alt="" className={`absolute inset-0 !mb-0 h-full w-full !max-w-none object-cover object-left transition-[filter,transform] duration-500 group-has-[abbr:hover]/card:scale-110 group-has-[abbr:hover]/card:blur-sm group-has-[abbr:focus]/card:scale-110 group-has-[abbr:focus]/card:blur-sm motion-reduce:transition-none`} />
             </div>}
-            <div className={`mb-3 min-h-10 shrink-0 items-start ${header ? 'hidden' : 'flex'}`}>
+            <div className={`mb-3 min-h-10 shrink-0 items-start ${banner ? 'hidden' : 'flex'}`}>
                 <span aria-hidden="true" className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-sky-100 text-sky-700 dark:bg-sky-100 dark:text-sky-700">
                     {icon ? <img src={icon} alt="" className="!mb-0 h-6 w-6 object-contain" /> : <Code2 size={22} strokeWidth={1.5} />}
                 </span>
@@ -69,22 +69,26 @@ export default function ProjectItem({ title, description, details, subtitle, hre
             <div className="min-w-0 flex-1">
                 <div className="flex items-start gap-3">
                     <div className="min-w-0 flex-1">
-                        <div role="heading" aria-level={3} className="text-xl font-medium leading-tight text-stone-950 dark:text-stone-50">{title}</div>
+                        <div role="heading" aria-level={3} className={`${wide ? 'sm:text-2xl ' : ''}text-xl font-medium leading-tight text-stone-950 dark:text-stone-50`}>{title}</div>
                         {subtitle && <div className="mt-1 text-sm text-neutral-500 dark:text-zinc-400">{subtitle}</div>}
                     </div>
-                    {href ? <Link href={href} className={arrowClasses}>{arrow}</Link> : <ComingSoon className={arrowClasses}>{arrow}</ComingSoon>}
+                    {href ? <Link href={href} {...external(href)} className={arrowClasses}>{arrow}</Link> : <ComingSoon className={arrowClasses}>{arrow}</ComingSoon>}
                 </div>
-                <div className="mt-3 text-sm leading-relaxed text-neutral-600 dark:text-neutral-300">{description}</div>
+                <div className="mt-3 min-h-[4lh] text-sm leading-relaxed text-neutral-600 dark:text-neutral-300">{description}</div>
                 {details && <ProjectDetails title={title} text={details} />}
                 {(children || expertise || details) && <>
                     {(children || details) && <div aria-hidden="true" className={`mx-auto my-4 w-2/3 border-t border-zinc-200/70 dark:border-zinc-700/70 ${details ? 'invisible peer-data-[expanded=true]/details:visible' : ''}`} />}
                     <div className="flex flex-wrap items-center justify-between gap-2">
                         {children && <div className="flex flex-wrap gap-2">{children}</div>}
+                        {demo && <Link href={demo} {...external(demo)} className={`${arrowClasses.replace('h-11 w-11', 'h-9 w-9')} ml-auto`}>
+                            <span className="sr-only">Open the live site of {title}</span>
+                            <Globe aria-hidden="true" size={18} strokeWidth={1.5} />
+                        </Link>}
                         {expertise && <abbr
                             title={expertise}
                             aria-label={expertise}
                             tabIndex={0}
-                            className="group/expertise absolute right-4 top-4 z-10 flex h-10 max-w-[calc(100%-6rem)] items-center rounded-xl bg-stone-950 px-3 text-xs font-medium text-stone-50 no-underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-600 dark:bg-stone-200 dark:text-stone-950"
+                            className={`group/expertise absolute right-4 top-4 z-10 flex h-10 max-w-[calc(100%-6rem)] items-center rounded-xl bg-stone-950 px-3 text-xs font-medium text-stone-50 no-underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-600 dark:bg-stone-200 dark:text-stone-950 ${wide ? 'sm:right-[calc(50%+2rem)] sm:max-w-[calc(50%-4rem)]' : ''}`}
                         >
                             <span aria-hidden="true" className="grid grid-cols-[minmax(0,1fr)] transition-[grid-template-columns] duration-300 group-hover/expertise:grid-cols-[minmax(0,0fr)] group-focus/expertise:grid-cols-[minmax(0,0fr)] [@media(hover:none)]:grid-cols-[minmax(0,0fr)] motion-reduce:transition-none"><span className="overflow-hidden whitespace-nowrap">{expertiseShort ?? expertise}</span></span>
                             <span aria-hidden="true" className="grid min-w-0 grid-cols-[minmax(0,0fr)] transition-[grid-template-columns] duration-300 group-hover/expertise:grid-cols-[minmax(0,1fr)] group-focus/expertise:grid-cols-[minmax(0,1fr)] [@media(hover:none)]:grid-cols-[minmax(0,1fr)] motion-reduce:transition-none"><span className="overflow-hidden whitespace-nowrap capitalize">{expertise}</span></span>
