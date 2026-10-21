@@ -54,12 +54,17 @@ export default function ProjectItem({ title, description, details, subtitle, hre
     </>
     const arrowClasses = 'group/view !flex h-11 w-11 shrink-0 items-center justify-center !rounded-xl border border-zinc-200/70 bg-zinc-50 text-neutral-600 transition-colors hover:border-zinc-300 hover:bg-zinc-100 hover:text-zinc-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-700 dark:border-zinc-700 dark:bg-neutral-900/60 dark:text-zinc-300 dark:hover:border-zinc-600 dark:hover:bg-neutral-800 dark:hover:text-zinc-100 dark:focus-visible:outline-zinc-300'
 
+    // The wide card takes the dark tone of its banner so the two halves read as one.
+    const surface = wide ? 'dark border-zinc-800 bg-[#0d1117]' : 'border-zinc-200/70 bg-white dark:border-zinc-800 dark:bg-neutral-800/40'
+    // Blur reveals soft edges, so zoom hides them; the wide card sits on the banner's own dark tone and doesn't need it.
+    const zoom = wide ? '' : 'group-has-[abbr:hover]/card:scale-110 group-has-[abbr:focus]/card:scale-110'
+
     const external = (url: string) => /^https?:/.test(url) ? { target: '_blank', rel: 'noopener noreferrer' } : {}
 
     return (
-        <div data-pinned={pinned} className={`group/card relative flex min-w-0 flex-col self-start rounded-3xl border border-zinc-200/70 bg-white p-4 shadow-sm dark:border-zinc-800 dark:bg-neutral-800/40 ${wide ? 'sm:col-span-2 sm:flex-row sm:self-stretch' : ''} ${pinned === 'true' ? '' : 'group-data-[view=pinned]/projects:hidden'}`}>
+        <div data-pinned={pinned} className={`group/card relative flex min-w-0 flex-col self-start rounded-3xl border p-4 shadow-sm ${surface} ${wide ? 'sm:col-span-2 sm:flex-row sm:self-stretch' : ''} ${pinned === 'true' ? '' : 'group-data-[view=pinned]/projects:hidden'}`}>
             {banner && <div className={`relative -mx-4 -mt-4 mb-4 aspect-[452/195] overflow-hidden rounded-t-3xl ${wide ? 'sm:-my-4 sm:mr-4 sm:aspect-auto sm:min-h-64 sm:w-1/2 sm:shrink-0 sm:rounded-l-3xl sm:rounded-tr-none' : ''}`}>
-                <img src={banner} alt="" className={`absolute inset-0 !mb-0 h-full w-full !max-w-none object-cover object-left transition-[filter,transform] duration-500 group-has-[abbr:hover]/card:scale-110 group-has-[abbr:hover]/card:blur-sm group-has-[abbr:focus]/card:scale-110 group-has-[abbr:focus]/card:blur-sm motion-reduce:transition-none`} />
+                <img src={banner} alt="" className={`absolute inset-0 !mb-0 h-full w-full !max-w-none object-cover object-left transition-[filter,transform] duration-500 ${zoom} group-has-[abbr:hover]/card:blur-sm group-has-[abbr:focus]/card:blur-sm motion-reduce:transition-none`} />
             </div>}
             <div className={`mb-3 min-h-10 shrink-0 items-start ${banner ? 'hidden' : 'flex'}`}>
                 <span aria-hidden="true" className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-sky-100 text-sky-700 dark:bg-sky-100 dark:text-sky-700">
