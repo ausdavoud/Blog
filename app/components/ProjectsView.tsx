@@ -132,7 +132,7 @@ export function ProjectNavigation({ sections }: { sections: ProjectSection[] }) 
 
     return <nav
         aria-label="Project sections"
-        className="mb-8 hidden flex-wrap gap-x-4 gap-y-2 text-sm md:flex xl:fixed xl:left-[calc(50%+22rem)] xl:top-1/2 xl:z-20 xl:mb-0 xl:max-h-[calc(100svh-8rem)] xl:w-52 xl:-translate-y-1/2 xl:flex-col xl:flex-nowrap xl:gap-0 xl:overflow-y-auto xl:p-3"
+        className="hidden text-sm xl:fixed xl:left-[calc(50%+22rem)] xl:top-1/2 xl:z-20 xl:flex xl:max-h-[calc(100svh-8rem)] xl:w-52 xl:-translate-y-1/2 xl:flex-col xl:overflow-y-auto xl:p-3"
     >
         {sections.map(item => <a
             key={item.id}
