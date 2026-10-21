@@ -1,5 +1,5 @@
 ---
-title: Page Tables —  What MIT 6.828 Taught Me
+title: Page Tables —  What MIT 6.S081 Taught Me
 date: 2026-09-19
 keywords: page tables, os
 ---
@@ -9,7 +9,7 @@ keywords: page tables, os
 
 # Prologue 
 
-I watched the [MIT 6.828 lecture on page tables](https://www.youtube.com/watch?v=s-Z5t_yTyTM), and I felt like a baboon. 
+I watched the [MIT 6.S081 lecture on page tables](https://www.youtube.com/watch?v=s-Z5t_yTyTM), and I felt like a baboon. 
 
 I searched.
 
@@ -313,7 +313,7 @@ As I was writing this article, I started to feel a bit intimidated by how much I
 
 I noticed this as well, and I plan to improve it in the upcoming essays.
 
-This was a demonstration of my struggles at understanding page tables while studying the MIT 6.828 course [available online](https://pdos.csail.mit.edu/6.828/2021/schedule.html).
+This was a demonstration of my struggles at understanding page tables while studying the MIT 6.S081 course [available online](https://pdos.csail.mit.edu/6.828/2021/schedule.html).
 
 Thanks for reading.
 
