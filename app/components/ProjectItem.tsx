@@ -63,8 +63,8 @@ export default function ProjectItem({ title, description, details, subtitle, hre
 
     return (
         <div data-pinned={pinned} className={`group/card relative flex min-w-0 flex-col self-start rounded-3xl border p-4 shadow-sm ${surface} ${wide ? 'sm:col-span-2 sm:flex-row sm:self-stretch' : ''} ${pinned === 'true' ? '' : 'group-data-[view=pinned]/projects:hidden'}`}>
-            {banner && <div className={`relative -mx-4 -mt-4 mb-4 aspect-[452/195] overflow-hidden rounded-t-3xl ${wide ? 'sm:-my-4 sm:mr-4 sm:aspect-auto sm:min-h-64 sm:w-1/2 sm:shrink-0 sm:rounded-l-3xl sm:rounded-tr-none' : ''}`}>
-                <img src={banner} alt="" className={`absolute inset-0 !mb-0 h-full w-full !max-w-none object-cover object-left transition-[filter,transform] duration-500 ${zoom} group-has-[abbr:hover]/card:blur-sm group-has-[abbr:focus]/card:blur-sm motion-reduce:transition-none`} />
+            {banner && <div className={`relative -mx-4 -mt-4 mb-4 aspect-[452/195] overflow-hidden rounded-t-3xl ${wide ? 'sm:-my-4 sm:mr-4 sm:aspect-auto sm:min-h-[16.5rem] sm:w-1/2 sm:bg-[#0d1117] sm:shrink-0 sm:rounded-l-3xl sm:rounded-tr-none' : ''}`}>
+                <img src={banner} alt="" className={`absolute inset-0 !mb-0 h-full w-full !max-w-none object-cover object-left ${wide ? 'sm:bottom-auto sm:h-[16.5rem]' : ''} transition-[filter,transform] duration-500 ${zoom} group-has-[abbr:hover]/card:blur-sm group-has-[abbr:focus]/card:blur-sm motion-reduce:transition-none`} />
             </div>}
             <div className={`mb-3 min-h-10 shrink-0 items-start ${banner ? 'hidden' : 'flex'}`}>
                 <span aria-hidden="true" className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-sky-100 text-sky-700 dark:bg-sky-100 dark:text-sky-700">
@@ -79,7 +79,7 @@ export default function ProjectItem({ title, description, details, subtitle, hre
                     </div>
                     {href ? <Link href={href} {...external(href)} className={arrowClasses}>{arrow}</Link> : <ComingSoon className={arrowClasses}>{arrow}</ComingSoon>}
                 </div>
-                <div className="mt-3 min-h-[4lh] text-sm leading-relaxed text-neutral-600 dark:text-neutral-300">{description}</div>
+                <div className="mt-3 min-h-[3lh] text-sm leading-relaxed text-neutral-600 dark:text-neutral-300">{description}</div>
                 {details && <ProjectDetails title={title} text={details} />}
                 {(children || expertise || details) && <>
                     {(children || details) && <div aria-hidden="true" className={`mx-auto my-4 w-2/3 border-t border-zinc-200/70 dark:border-zinc-700/70 ${details ? 'invisible peer-data-[expanded=true]/details:visible' : ''}`} />}

@@ -12,7 +12,7 @@ export function ProjectDetails({ title, text }: { title: string; text: string })
     const [expanded, setExpanded] = useState(false)
     const id = useId()
 
-    return <div data-expanded={expanded} className={`peer/details relative transition-[padding-bottom] duration-500 ease-in-out motion-reduce:transition-none ${expanded ? 'pb-8' : 'pb-0'}`}>
+    return <div data-expanded={expanded} className={`peer/details relative transition-[padding-bottom] duration-500 ease-in-out motion-reduce:transition-none ${expanded ? 'pb-6' : 'pb-0'}`}>
         <div id={id} inert={!expanded || undefined} aria-hidden={!expanded} className={`grid transition-[grid-template-rows,opacity] duration-500 ease-in-out motion-reduce:transition-none ${expanded ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}`}>
             <div className="min-h-0 overflow-hidden"><div className="pt-3 whitespace-pre-line text-sm leading-relaxed text-neutral-600 dark:text-neutral-300">{text}</div></div>
         </div>
@@ -24,7 +24,7 @@ export function ProjectDetails({ title, text }: { title: string; text: string })
             aria-label={`${expanded ? 'Show less' : 'Read more'} about ${title}`}
             title={expanded ? 'Show less' : 'Read more'}
             onClick={() => setExpanded(value => !value)}
-            className={`absolute left-1/2 top-full z-10 grid h-7 w-7 -translate-x-1/2 place-items-center rounded-full border border-zinc-200 bg-white text-neutral-600 transition-[background-color,margin-top] duration-500 ease-in-out hover:bg-zinc-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-700 motion-reduce:transition-none dark:border-zinc-700 dark:bg-neutral-900 dark:text-zinc-300 dark:hover:bg-neutral-800 dark:focus-visible:outline-zinc-300 ${expanded ? '-mt-5' : '-mt-1'}`}
+            className={`absolute left-1/2 top-full z-10 grid h-7 w-7 -translate-x-1/2 place-items-center rounded-full border border-zinc-200 bg-white text-neutral-600 transition-[background-color,margin-top] duration-500 ease-in-out hover:bg-zinc-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-700 motion-reduce:transition-none dark:border-zinc-700 dark:bg-neutral-900 dark:text-zinc-300 dark:hover:bg-neutral-800 dark:focus-visible:outline-zinc-300 ${expanded ? '-mt-[18px]' : '-mt-1'}`}
         ><ChevronDown aria-hidden="true" size={16} strokeWidth={1.5} className={`block shrink-0 transition-transform duration-500 ease-in-out motion-reduce:transition-none ${expanded ? 'rotate-180' : ''}`} /></button>
     </div>
 }
