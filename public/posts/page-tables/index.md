@@ -4,7 +4,7 @@ date: 2026-09-19
 keywords: page tables, os
 ---
 
-> As much as I hate to say it, this post was written by a so-called human, and no AIs were used in crafting the original text. Fuck your “*It’s not* blah blah blah, *but* blah blah blah” clauses. 
+> As much as I hate to say it, this post was written by a so-called human, and no AIs were used in crafting the original text. Damn your “*It’s not* blah blah blah, *but* blah blah blah” clauses. 
 
 
 # Prologue 
