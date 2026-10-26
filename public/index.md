@@ -12,7 +12,7 @@ In case you don’t know me, sneak a peek at <ComingSoon className="underline te
 \
 Still interested? Read my <a href="/posts" className="underline text-sky-600 dark:text-sky-400 font-medium hover:text-sky-700 dark:hover:text-sky-300 transition-colors">posts</a> and <ComingSoon className="underline text-neutral-500 dark:text-zinc-400">poems</ComingSoon>.
 \
-Also, here’s a link to my <ComingSoon className="underline text-neutral-500 dark:text-zinc-400">CV</ComingSoon>.
+Also, here’s a link to my <a target="_blank" rel="noopener noreferrer" href="/CV.pdf" className="underline text-sky-600 dark:text-sky-400 font-medium hover:text-sky-700 dark:hover:text-sky-300 transition-colors">CV</a>.
 
 Bye buddy 👋🏻
 </div>
