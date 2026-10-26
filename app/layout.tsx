@@ -29,7 +29,9 @@ export default function RootLayout({
     : fonts.style.fontFamily
   return (
     <html id="page-scroll" lang="en" className="overflow-y-auto data-[comet-scrollbar]:[scrollbar-width:none] data-[comet-scrollbar]:[&::-webkit-scrollbar]:hidden" suppressHydrationWarning>
-      <GoogleAnalytics />
+      <head>
+        <GoogleAnalytics />
+      </head>
       <body className="flex h-full min-h-svh w-full flex-col items-center bg-zinc-50 dark:bg-neutral-900 text-neutral-800 dark:text-neutral-200"
         style={{ fontFamily }}>
         <Providers>
